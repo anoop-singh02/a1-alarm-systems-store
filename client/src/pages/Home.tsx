@@ -10,12 +10,60 @@ import {
   Volume2,
   Zap,
 } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Link } from "wouter";
 
 const assetPath = (file: string) =>
   `${import.meta.env.BASE_URL}${file.replace(/^\/+/, "")}`;
 
+const testimonials = [
+  {
+    quote:
+      "We switched to A-1 Alarm Systems last year and the installation team was outstanding. Monitoring has been rock solid.",
+    author: "Derek P.",
+    role: "Calgary Retail Owner",
+  },
+  {
+    quote:
+      "Their custom automation package streamlined everything in our office. Support is fast and friendly.",
+    author: "Kelly R.",
+    role: "Operations Manager",
+  },
+];
+
+const partners = ["DSC", "Honeywell", "Axis", "Yale"];
+
 export default function HomePage() {
+  const [activeSection, setActiveSection] = useState("home");
+
+  useEffect(() => {
+    const sectionIds = ["home", "services", "about", "trust"];
+    const observers: IntersectionObserver[] = [];
+
+    sectionIds.forEach((id) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              setActiveSection(id);
+            }
+          });
+        },
+        {
+          rootMargin: "-30% 0px -50% 0px",
+        },
+      );
+      observer.observe(el);
+      observers.push(observer);
+    });
+
+    return () => {
+      observers.forEach((observer) => observer.disconnect());
+    };
+  }, []);
+
   const services = [
     {
       icon: Shield,
@@ -77,12 +125,12 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <SiteHeader currentPage="home" />
+      <SiteHeader currentPage="home" activeAnchor={activeSection} />
 
       {/* Hero Section */}
       <section
         id="home"
-        className="relative overflow-hidden bg-gradient-to-br from-[#0096c7] via-[#0080c1] to-[#005aa0] text-white py-20 md:py-32"
+        className="relative overflow-hidden bg-gradient-to-br from-[#0096c7] via-[#0080c1] to-[#005aa0] text-white py-20 md:py-32 scroll-mt-24"
       >
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-0 right-0 w-96 h-96 bg-white rounded-full blur-3xl"></div>
@@ -133,7 +181,7 @@ export default function HomePage() {
       </section>
 
       {/* Why Us Section */}
-      <section className="py-16 md:py-24 bg-muted/30">
+      <section className="py-16 md:py-24 bg-muted/30 scroll-mt-24">
         <div className="container">
           <div className="grid md:grid-cols-3 gap-8">
             {whyUs.map((item, index) => (
@@ -161,7 +209,7 @@ export default function HomePage() {
       </section>
 
       {/* Services Section */}
-      <section id="services" className="py-16 md:py-24">
+      <section id="services" className="py-16 md:py-24 scroll-mt-24">
         <div className="container">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
@@ -207,7 +255,7 @@ export default function HomePage() {
       </section>
 
       {/* About Section */}
-      <section id="about" className="py-16 md:py-24 bg-muted/30">
+      <section id="about" className="py-16 md:py-24 bg-muted/30 scroll-mt-24">
         <div className="container">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
@@ -290,57 +338,47 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* FAQ Section */}
-      <section id="faq" className="py-16 md:py-24">
-        <div className="container">
-          <div className="text-center max-w-3xl mx-auto mb-12">
+      {/* Trust Section */}
+      <section id="trust" className="py-16 md:py-24 bg-white">
+        <div className="container grid lg:grid-cols-[1.2fr_1fr] gap-12 items-center">
+          <div>
             <p className="text-sm uppercase tracking-wide text-primary font-semibold mb-3">
-              FAQ
+              Testimonials
             </p>
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              Frequently Asked Questions
+            <h2 className="text-3xl font-bold text-foreground mb-6">
+              Trusted by Calgary homeowners and businesses
             </h2>
-            <p className="text-lg text-muted-foreground">
-              Answers to common questions about our systems, pricing, and
-              service process.
-            </p>
+            <div className="space-y-6">
+              {testimonials.map((testimonial) => (
+                <Card
+                  key={testimonial.author}
+                  className="p-6 border border-primary/10 bg-muted/20"
+                >
+                  <p className="text-lg text-foreground mb-4 leading-relaxed">
+                    “{testimonial.quote}”
+                  </p>
+                  <p className="text-sm font-semibold text-foreground">
+                    {testimonial.author}
+                  </p>
+                  <p className="text-xs text-muted-foreground">{testimonial.role}</p>
+                </Card>
+              ))}
+            </div>
           </div>
-
-          <div className="grid md:grid-cols-2 gap-6">
-            {[
-              {
-                question: "How soon can you install a system?",
-                answer:
-                  "Most residential projects can be scheduled within 1–2 weeks after the site assessment.",
-              },
-              {
-                question: "Do you offer financing or leasing?",
-                answer:
-                  "Yes, we provide flexible payment plans and can bundle monitoring into a monthly rate.",
-              },
-              {
-                question: "Can I monitor my system from my phone?",
-                answer:
-                  "All of our packages include secure mobile access with live video and instant alerts.",
-              },
-              {
-                question: "What happens if I move?",
-                answer:
-                  "We can relocate your equipment or design a new system for the next owner. Contracts are cancellable with 30 days notice.",
-              },
-            ].map((item) => (
-              <Card
-                key={item.question}
-                className="p-6 border border-primary/10 bg-white"
-              >
-                <h3 className="text-lg font-semibold text-foreground mb-3">
-                  {item.question}
-                </h3>
-                <p className="text-muted-foreground leading-relaxed text-sm">
-                  {item.answer}
-                </p>
-              </Card>
-            ))}
+          <div>
+            <p className="text-sm uppercase tracking-wide text-primary font-semibold mb-3">
+              Partners & Certifications
+            </p>
+            <div className="grid grid-cols-2 gap-4">
+              {partners.map((partner) => (
+                <Card
+                  key={partner}
+                  className="p-6 border border-dashed border-primary/30 text-center text-lg font-semibold text-muted-foreground"
+                >
+                  {partner}
+                </Card>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -387,9 +425,14 @@ export default function HomePage() {
               </ul>
             </div>
           </div>
-          <div className="border-t border-white/10 pt-8 text-center text-sm text-white/60">
-            © {new Date().getFullYear()} A-1 Alarm Systems Inc. All rights
-            reserved.
+          <div className="border-t border-white/10 pt-8 text-center text-sm text-white/60 space-y-3">
+            <a href="#home" className="text-white hover:text-primary transition-colors">
+              Back to top
+            </a>
+            <p>
+              © {new Date().getFullYear()} A-1 Alarm Systems Inc. All rights
+              reserved.
+            </p>
           </div>
         </div>
       </footer>

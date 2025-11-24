@@ -4,6 +4,7 @@ import { Shield } from "lucide-react";
 
 type SiteHeaderProps = {
   currentPage: "home" | "store" | "contact";
+  activeAnchor?: string;
 };
 
 const baseHref = (() => {
@@ -16,12 +17,12 @@ const homeUrl = baseHref === "/" ? "/" : baseHref;
 const navItems = [
   { label: "Home", anchorId: "home" },
   { label: "About", anchorId: "about" },
+  { label: "Services", anchorId: "services" },
   { label: "Store", path: "/store" },
-  { label: "FAQ", anchorId: "faq" },
   { label: "Contact", path: "/contact" },
 ];
 
-export function SiteHeader({ currentPage }: SiteHeaderProps) {
+export function SiteHeader({ currentPage, activeAnchor }: SiteHeaderProps) {
   return (
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60 border-b border-border">
       <div className="container flex items-center justify-between h-16">
@@ -53,11 +54,17 @@ export function SiteHeader({ currentPage }: SiteHeaderProps) {
                 ? `#${item.anchorId}`
                 : `${homeUrl}#${item.anchorId}`;
 
+            const isActive =
+              currentPage === "home" && item.anchorId === activeAnchor;
+
             return (
               <a
                 key={item.label}
                 href={href}
-                className="hover:text-primary transition-colors"
+                className={`hover:text-primary transition-colors ${
+                  isActive ? "text-primary" : ""
+                }`}
+                aria-current={isActive ? "true" : undefined}
               >
                 {item.label}
               </a>
