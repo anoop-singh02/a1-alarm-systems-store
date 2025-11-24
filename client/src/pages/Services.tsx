@@ -123,6 +123,36 @@ export default function ServicesPage() {
             );
           })}
         </div>
+        <div className="container mt-12 grid gap-8 md:grid-cols-2">
+          <Card className="p-6 space-y-3">
+            <h3 className="text-xl font-semibold text-foreground">
+              Residential & Commercial Security
+            </h3>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              Dive deeper into wired vs. wireless installs, monitoring, and
+              property-value benefits carried forward from our legacy site.
+            </p>
+            <Link href="/residential-commercial-security">
+              <Button variant="ghost" className="px-0 text-primary">
+                View details <ChevronRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
+          </Card>
+          <Card className="p-6 space-y-3">
+            <h3 className="text-xl font-semibold text-foreground">
+              Security Options
+            </h3>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              Explore every sensor and add-on—from video monitoring to panic
+              buttons—relisted from the original site with modern context.
+            </p>
+            <Link href="/security-options">
+              <Button variant="ghost" className="px-0 text-primary">
+                Explore options <ChevronRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
+          </Card>
+        </div>
       </section>
       <Footer />
     </div>

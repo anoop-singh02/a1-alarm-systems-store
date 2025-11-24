@@ -3,23 +3,35 @@ import { Link } from "wouter";
 import { Shield, Menu, X } from "lucide-react";
 import { useState } from "react";
 
+type HeaderPage =
+  | "home"
+  | "about"
+  | "services"
+  | "residential"
+  | "securityOptions"
+  | "store"
+  | "contact";
+
 type SiteHeaderProps = {
-  currentPage: "home" | "about" | "services" | "store" | "contact";
+  currentPage: HeaderPage;
 };
 
-const baseHref = (() => {
-  const base = import.meta.env.BASE_URL ?? "/";
-  return base.endsWith("/") ? base : `${base}/`;
-})();
-
-const homeUrl = baseHref === "/" ? "/" : baseHref;
-
-const navItems = [
-  { label: "Home", path: "/" },
-  { label: "About", path: "/about" },
-  { label: "Services", path: "/services" },
-  { label: "Store", path: "/store" },
-  { label: "Contact", path: "/contact" },
+const navItems: Array<{ label: string; path: string; key: HeaderPage }> = [
+  { label: "Home", path: "/", key: "home" },
+  { label: "About", path: "/about", key: "about" },
+  {
+    label: "Residential & Commercial",
+    path: "/residential-commercial-security",
+    key: "residential",
+  },
+  {
+    label: "Security Options",
+    path: "/security-options",
+    key: "securityOptions",
+  },
+  { label: "Services", path: "/services", key: "services" },
+  { label: "Store", path: "/store", key: "store" },
+  { label: "Contact", path: "/contact", key: "contact" },
 ];
 
 export function SiteHeader({ currentPage }: SiteHeaderProps) {
@@ -30,24 +42,21 @@ export function SiteHeader({ currentPage }: SiteHeaderProps) {
   return (
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60 border-b border-border">
       <div className="container flex items-center justify-between h-16">
-        <a
-          href={currentPage === "home" ? "#home" : homeUrl}
-          className="flex items-center gap-2 hover:opacity-80 transition-opacity"
-        >
-          <Shield className="w-8 h-8 text-primary" aria-hidden="true" />
-          <span className="text-xl font-bold text-foreground">
-            A-1 Alarm Systems
+        <Link href="/" className="hover:opacity-80 transition-opacity">
+          <span className="flex items-center gap-2">
+            <Shield className="w-8 h-8 text-primary" aria-hidden="true" />
+            <span className="text-xl font-bold text-foreground">
+              A-1 Alarm Systems
+            </span>
           </span>
-        </a>
+        </Link>
         <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-muted-foreground">
           {navItems.map((item) => (
             <Link
               key={item.label}
-              href={item.path === "/" ? "/" : item.path}
+              href={item.path}
               className={`hover:text-primary transition-colors ${
-                currentPage === (item.path === "/" ? "home" : item.path.slice(1))
-                  ? "text-primary"
-                  : ""
+                currentPage === item.key ? "text-primary" : ""
               }`}
             >
               {item.label}
@@ -77,7 +86,7 @@ export function SiteHeader({ currentPage }: SiteHeaderProps) {
             {navItems.map((item) => (
               <Link
                 key={item.label}
-                href={item.path === "/" ? "/" : item.path}
+                href={item.path}
                 className="hover:text-primary transition-colors"
                 onClick={closeMobile}
               >

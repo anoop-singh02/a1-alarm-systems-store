@@ -5,6 +5,8 @@ import DesignSystemPage from "@/pages/DesignSystem";
 import NotFound from "@/pages/NotFound";
 import AboutPage from "@/pages/About";
 import ServicesPage from "@/pages/Services";
+import ResidentialCommercialPage from "@/pages/ResidentialCommercial";
+import SecurityOptionsPage from "@/pages/SecurityOptions";
 import { Route, Router, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
@@ -21,6 +23,11 @@ function Routes() {
         <Route path={"/"} component={Home} />
         <Route path={"/about"} component={AboutPage} />
         <Route path={"/services"} component={ServicesPage} />
+        <Route
+          path={"/residential-commercial-security"}
+          component={ResidentialCommercialPage}
+        />
+        <Route path={"/security-options"} component={SecurityOptionsPage} />
         <Route path={"/store"} component={DesignSystemPage} />
         <Route path={"/contact"} component={ContactPage} />
         <Route path={"/404"} component={NotFound} />
