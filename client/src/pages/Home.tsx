@@ -77,7 +77,7 @@ export default function HomePage() {
       title: "Alarm Systems",
       description:
         "Custom-built security systems tailored to Calgary homes and businesses.",
-      image: assetPath("service-alarm.png"),
+      icon: Shield,
       highlights: [
         "Hardwired & wireless hybrids",
         "Keypad + mobile app control",
@@ -88,7 +88,7 @@ export default function HomePage() {
       title: "Video Surveillance",
       description:
         "Indoor/outdoor cameras with secure recording and remote viewing.",
-      image: assetPath("service-video.png"),
+      icon: Camera,
       highlights: [
         "4K deterrent cameras",
         "Cloud & local storage options",
@@ -99,7 +99,7 @@ export default function HomePage() {
       title: "Home Automation",
       description:
         "Lighting, locks, thermostats, and shades unified under one secure app.",
-      image: assetPath("service-home.png"),
+      icon: HomeIcon,
       highlights: [
         "Z-Wave & Wi-Fi integrations",
         "Scenes for arrive/away routines",
@@ -110,7 +110,7 @@ export default function HomePage() {
       title: "Central Vacuum",
       description:
         "Built-in cleaning systems designed for modern builds and renovations.",
-      image: assetPath("service-vacuum.png"),
+      icon: Zap,
       highlights: [
         "Powerful low-noise units",
         "Garage & high ceiling kits",
@@ -121,7 +121,7 @@ export default function HomePage() {
       title: "Sound Systems",
       description:
         "High-quality distributed audio for entertainment, boardrooms, and retail.",
-      image: assetPath("service-sound.png"),
+      icon: Volume2,
       highlights: [
         "Multi-zone streaming",
         "Discreet in-ceiling speakers",
@@ -262,50 +262,52 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="grid gap-8">
-            {services.map((service, index) => (
-              <article
-                key={service.title}
-                className="relative overflow-hidden rounded-3xl border border-slate-200 shadow-lg"
-              >
-                <div className="absolute inset-0">
-                  <img
-                    src={service.image}
-                    alt={service.title}
-                    className="h-full w-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-br from-slate-900/80 via-slate-900/60 to-slate-900/20"></div>
-                </div>
-                <div className="relative flex flex-col gap-4 md:flex-row md:items-center justify-between p-8 text-white">
-                  <div className="max-w-3xl">
-                    <p className="text-xs uppercase tracking-[0.2em] text-white/60">
-                      Service {String(index + 1).padStart(2, "0")}
-                    </p>
-                    <h3 className="text-2xl font-semibold mb-2">{service.title}</h3>
-                    <p className="text-white/85 leading-relaxed">
+          <div className="grid gap-8 md:grid-cols-2">
+            {services.map((service, index) => {
+              const Icon = service.icon;
+              return (
+                <Card
+                  key={service.title}
+                  className="h-full border border-slate-200 shadow-md hover:shadow-lg transition-shadow"
+                >
+                  <div className="p-6">
+                    <div className="flex items-center gap-4 mb-4">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
+                        <Icon className="w-6 h-6" aria-hidden="true" />
+                      </div>
+                      <div>
+                        <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+                          Service {String(index + 1).padStart(2, "0")}
+                        </p>
+                        <h3 className="text-xl font-semibold text-foreground">
+                          {service.title}
+                        </h3>
+                      </div>
+                    </div>
+                    <p className="text-muted-foreground leading-relaxed">
                       {service.description}
                     </p>
-                    <ul className="mt-4 space-y-2 text-sm text-white/85">
+                    <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
                       {service.highlights.map((highlight) => (
                         <li key={highlight} className="flex items-center gap-2">
-                          <span className="h-2 w-2 rounded-full bg-white/80"></span>
+                          <span className="h-1.5 w-1.5 rounded-full bg-primary"></span>
                           {highlight}
                         </li>
                       ))}
                     </ul>
+                    <Link href="/contact">
+                      <Button
+                        variant="ghost"
+                        className="mt-6 px-0 text-primary hover:text-primary"
+                      >
+                        Learn more
+                        <ChevronRight className="ml-2 h-4 w-4" />
+                      </Button>
+                    </Link>
                   </div>
-                  <Link href="/contact">
-                    <Button
-                      variant="outline"
-                      className="border-white/40 text-white hover:bg-white/10"
-                    >
-                      Learn more
-                      <ChevronRight className="ml-2 h-4 w-4" />
-                    </Button>
-                  </Link>
-                </div>
-              </article>
-            ))}
+                </Card>
+              );
+            })}
           </div>
         </div>
       </section>
