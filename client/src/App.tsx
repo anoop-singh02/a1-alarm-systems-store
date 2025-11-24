@@ -1,5 +1,7 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import ContactPage from "@/pages/Contact";
+import DesignSystemPage from "@/pages/DesignSystem";
 import NotFound from "@/pages/NotFound";
 import { Route, Router, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
@@ -15,6 +17,8 @@ function Routes() {
     <Router base={routerBase}>
       <Switch>
         <Route path={"/"} component={Home} />
+        <Route path={"/store"} component={DesignSystemPage} />
+        <Route path={"/contact"} component={ContactPage} />
         <Route path={"/404"} component={NotFound} />
         {/* Final fallback route */}
         <Route component={NotFound} />
