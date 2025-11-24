@@ -4,8 +4,7 @@ import { Shield, Menu, X } from "lucide-react";
 import { useState } from "react";
 
 type SiteHeaderProps = {
-  currentPage: "home" | "store" | "contact";
-  activeAnchor?: string;
+  currentPage: "home" | "about" | "services" | "store" | "contact";
 };
 
 const baseHref = (() => {
@@ -16,14 +15,14 @@ const baseHref = (() => {
 const homeUrl = baseHref === "/" ? "/" : baseHref;
 
 const navItems = [
-  { label: "Home", anchorId: "home" },
-  { label: "About", anchorId: "about" },
-  { label: "Services", anchorId: "services" },
+  { label: "Home", path: "/" },
+  { label: "About", path: "/about" },
+  { label: "Services", path: "/services" },
   { label: "Store", path: "/store" },
   { label: "Contact", path: "/contact" },
 ];
 
-export function SiteHeader({ currentPage, activeAnchor }: SiteHeaderProps) {
+export function SiteHeader({ currentPage }: SiteHeaderProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const closeMobile = () => setMobileOpen(false);
@@ -41,40 +40,19 @@ export function SiteHeader({ currentPage, activeAnchor }: SiteHeaderProps) {
           </span>
         </a>
         <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-muted-foreground">
-          {navItems.map((item) => {
-            if (item.path) {
-              return (
-                <Link
-                  key={item.label}
-                  href={item.path}
-                  className="hover:text-primary transition-colors"
-                >
-                  {item.label}
-                </Link>
-              );
-            }
-
-            const href =
-              currentPage === "home"
-                ? `#${item.anchorId}`
-                : `${homeUrl}#${item.anchorId}`;
-
-            const isActive =
-              currentPage === "home" && item.anchorId === activeAnchor;
-
-            return (
-              <a
-                key={item.label}
-                href={href}
-                className={`hover:text-primary transition-colors ${
-                  isActive ? "text-primary" : ""
-                }`}
-                aria-current={isActive ? "true" : undefined}
-              >
-                {item.label}
-              </a>
-            );
-          })}
+          {navItems.map((item) => (
+            <Link
+              key={item.label}
+              href={item.path === "/" ? "/" : item.path}
+              className={`hover:text-primary transition-colors ${
+                currentPage === (item.path === "/" ? "home" : item.path.slice(1))
+                  ? "text-primary"
+                  : ""
+              }`}
+            >
+              {item.label}
+            </Link>
+          ))}
         </nav>
         <div className="hidden md:block">
           <Link href="/contact">
@@ -96,35 +74,16 @@ export function SiteHeader({ currentPage, activeAnchor }: SiteHeaderProps) {
       {mobileOpen && (
         <div className="md:hidden border-t border-border bg-white">
           <div className="container py-4 flex flex-col gap-4 text-sm font-medium text-foreground">
-            {navItems.map((item) => {
-              if (item.path) {
-                return (
-                  <Link
-                    key={item.label}
-                    href={item.path}
-                    className="hover:text-primary transition-colors"
-                    onClick={closeMobile}
-                  >
-                    {item.label}
-                  </Link>
-                );
-              }
-
-              const href =
-                currentPage === "home"
-                  ? `#${item.anchorId}`
-                  : `${homeUrl}#${item.anchorId}`;
-              return (
-                <a
-                  key={item.label}
-                  href={href}
-                  onClick={closeMobile}
-                  className="hover:text-primary transition-colors"
-                >
-                  {item.label}
-                </a>
-              );
-            })}
+            {navItems.map((item) => (
+              <Link
+                key={item.label}
+                href={item.path === "/" ? "/" : item.path}
+                className="hover:text-primary transition-colors"
+                onClick={closeMobile}
+              >
+                {item.label}
+              </Link>
+            ))}
             <Link href="/contact" onClick={closeMobile}>
               <Button className="w-full bg-[#0096c7] hover:bg-[#0077a8] text-white">
                 Get Quote

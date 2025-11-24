@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Footer } from "@/components/Footer";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Camera, CheckCircle2 } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -347,6 +348,7 @@ export default function DesignSystemPage() {
           </div>
         </div>
       </section>
+      <Footer />
     </div>
   );
 }

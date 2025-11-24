@@ -1,3 +1,4 @@
+import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { SiteHeader } from "@/components/SiteHeader";
@@ -143,9 +144,7 @@ export default function ContactPage() {
         </div>
       </section>
 
-      <footer className="bg-slate-900 text-white py-8 text-center text-sm">
-        <p>© {new Date().getFullYear()} A-1 Alarm Systems Inc. All rights reserved.</p>
-      </footer>
+      <Footer />
     </div>
   );
 }

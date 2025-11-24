@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Footer } from "@/components/Footer";
 import { SiteHeader } from "@/components/SiteHeader";
 import {
   Award,
@@ -11,7 +12,6 @@ import {
   Volume2,
   Zap,
 } from "lucide-react";
-import { useEffect, useState } from "react";
 import { Link } from "wouter";
 
 const assetPath = (file: string) =>
@@ -42,35 +42,6 @@ const stats = [
 ];
 
 export default function HomePage() {
-  const [activeSection, setActiveSection] = useState("home");
-
-  useEffect(() => {
-    const sectionIds = ["home", "services", "about", "trust"];
-    const observers: IntersectionObserver[] = [];
-
-    sectionIds.forEach((id) => {
-      const el = document.getElementById(id);
-      if (!el) return;
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              setActiveSection(id);
-            }
-          });
-        },
-        {
-          rootMargin: "-30% 0px -50% 0px",
-        },
-      );
-      observer.observe(el);
-      observers.push(observer);
-    });
-
-    return () => {
-      observers.forEach((observer) => observer.disconnect());
-    };
-  }, []);
 
   const services = [
     {
@@ -153,7 +124,7 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <SiteHeader currentPage="home" activeAnchor={activeSection} />
+      <SiteHeader currentPage="home" />
 
       {/* Hero Section */}
       <section
@@ -454,59 +425,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-slate-900 text-white py-16">
-        <div className="container">
-          <div className="grid md:grid-cols-4 gap-8 mb-10">
-            <div>
-              <div className="flex items-center gap-2 mb-4">
-                <Shield className="w-6 h-6" aria-hidden="true" />
-                <span className="font-bold">A-1 Alarm Systems</span>
-              </div>
-              <p className="text-sm text-white/70">
-                Professional security solutions for over 20 years.
-              </p>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">Services</h4>
-              <ul className="space-y-2 text-sm text-white/70">
-                <li>Alarm Systems</li>
-                <li>Video Surveillance</li>
-                <li>Home Automation</li>
-                <li>Central Vacuum</li>
-                <li>Sound Systems</li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">Company</h4>
-              <ul className="space-y-2 text-sm text-white/70">
-                <li>Store</li>
-                <li>System Designer</li>
-                <li>FAQ</li>
-                <li>Contact</li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">Contact</h4>
-              <ul className="space-y-2 text-sm text-white/70">
-                <li>Calgary, Alberta</li>
-                <li>(403) 258-3749</li>
-                <li>Toll Free: 1-855-258-3749</li>
-                <li>info@a1alarm.ca</li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t border-white/10 pt-8 text-center text-sm text-white/60 space-y-3">
-            <a href="#home" className="text-white hover:text-primary transition-colors">
-              Back to top
-            </a>
-            <p>
-              © {new Date().getFullYear()} A-1 Alarm Systems Inc. All rights
-              reserved.
-            </p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
