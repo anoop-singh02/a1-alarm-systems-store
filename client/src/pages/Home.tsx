@@ -13,6 +13,11 @@ import {
   Award,
 } from "lucide-react";
 
+const assetPath = (file: string) =>
+  `${import.meta.env.BASE_URL}${file.replace(/^\/+/, "")}`;
+
+const homeHref = import.meta.env.BASE_URL || "/";
+
 export default function HomePage() {
   const services = [
     {
@@ -20,35 +25,35 @@ export default function HomePage() {
       title: "Alarm Systems",
       description:
         "Custom-built security systems tailored to your unique needs and requirements.",
-      image: "/service-alarm.png",
+      image: assetPath("service-alarm.png"),
     },
     {
       icon: Camera,
       title: "Video Surveillance",
       description:
         "Advanced surveillance solutions for residential and commercial properties.",
-      image: "/service-video.png",
+      image: assetPath("service-video.png"),
     },
     {
       icon: HomeIcon,
       title: "Home Automation",
       description:
         "Smart home integration for enhanced comfort and security control.",
-      image: "/service-home.png",
+      image: assetPath("service-home.png"),
     },
     {
       icon: Zap,
       title: "Central Vacuum",
       description:
         "Professional central vacuum cleaning systems for modern homes.",
-      image: "/service-vacuum.png",
+      image: assetPath("service-vacuum.png"),
     },
     {
       icon: Volume2,
       title: "Sound Systems",
       description:
         "High-quality in-home audio systems for entertainment and ambiance.",
-      image: "/service-sound.png",
+      image: assetPath("service-sound.png"),
     },
   ];
 
@@ -78,7 +83,10 @@ export default function HomePage() {
       {/* Navigation Header */}
       <header className="sticky top-0 z-50 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60 border-b border-border">
         <div className="container flex items-center justify-between h-16">
-          <a href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+          <a
+            href={homeHref}
+            className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+          >
             <Shield className="w-8 h-8 text-primary" />
             <span className="text-xl font-bold text-foreground">
               A-1 Alarm Systems
@@ -147,9 +155,9 @@ export default function HomePage() {
             </div>
 
             <div className="hidden md:block">
-              <img 
-                src="/security-building.png" 
-                alt="Commercial Security System" 
+              <img
+                src={assetPath("security-building.png")}
+                alt="Commercial Security System"
                 className="w-full h-auto rounded-xl shadow-lg"
               />
             </div>
