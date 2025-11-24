@@ -4,6 +4,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import {
   Award,
   Camera,
+  CheckCircle2,
   ChevronRight,
   Home as HomeIcon,
   Shield,
@@ -32,6 +33,13 @@ const testimonials = [
 ];
 
 const partners = ["DSC", "Honeywell", "Axis", "Yale"];
+
+const stats = [
+  { label: "Years in Calgary", value: "20+" },
+  { label: "24/7 Monitoring", value: "ULC" },
+  { label: "Contract Exit", value: "30 Days" },
+  { label: "Customer Satisfaction", value: "100%" },
+];
 
 export default function HomePage() {
   const [activeSection, setActiveSection] = useState("home");
@@ -66,39 +74,59 @@ export default function HomePage() {
 
   const services = [
     {
-      icon: Shield,
       title: "Alarm Systems",
       description:
-        "Custom-built security systems tailored to your unique needs and requirements.",
+        "Custom-built security systems tailored to Calgary homes and businesses.",
       image: assetPath("service-alarm.png"),
+      highlights: [
+        "Hardwired & wireless hybrids",
+        "Keypad + mobile app control",
+        "Professional installation & training",
+      ],
     },
     {
-      icon: Camera,
       title: "Video Surveillance",
       description:
-        "Advanced surveillance solutions for residential and commercial properties.",
+        "Indoor/outdoor cameras with secure recording and remote viewing.",
       image: assetPath("service-video.png"),
+      highlights: [
+        "4K deterrent cameras",
+        "Cloud & local storage options",
+        "AI analytics for alerts",
+      ],
     },
     {
-      icon: HomeIcon,
       title: "Home Automation",
       description:
-        "Smart home integration for enhanced comfort and security control.",
+        "Lighting, locks, thermostats, and shades unified under one secure app.",
       image: assetPath("service-home.png"),
+      highlights: [
+        "Z-Wave & Wi-Fi integrations",
+        "Scenes for arrive/away routines",
+        "Voice assistant compatibility",
+      ],
     },
     {
-      icon: Zap,
       title: "Central Vacuum",
       description:
-        "Professional central vacuum cleaning systems for modern homes.",
+        "Built-in cleaning systems designed for modern builds and renovations.",
       image: assetPath("service-vacuum.png"),
+      highlights: [
+        "Powerful low-noise units",
+        "Garage & high ceiling kits",
+        "Maintenance & repairs",
+      ],
     },
     {
-      icon: Volume2,
       title: "Sound Systems",
       description:
-        "High-quality in-home audio systems for entertainment and ambiance.",
+        "High-quality distributed audio for entertainment, boardrooms, and retail.",
       image: assetPath("service-sound.png"),
+      highlights: [
+        "Multi-zone streaming",
+        "Discreet in-ceiling speakers",
+        "Custom control keypads",
+      ],
     },
   ];
 
@@ -177,6 +205,19 @@ export default function HomePage() {
               />
             </div>
           </div>
+          <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4">
+            {stats.map((stat) => (
+              <Card
+                key={stat.label}
+                className="bg-white/10 border-white/20 text-white text-center py-6 backdrop-blur-sm"
+              >
+                <p className="text-3xl font-bold">{stat.value}</p>
+                <p className="text-xs uppercase tracking-wide">
+                  {stat.label}
+                </p>
+              </Card>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -213,43 +254,58 @@ export default function HomePage() {
         <div className="container">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              Our Services
+              Comprehensive Services
             </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Comprehensive security and home automation solutions for
-              residential and commercial properties
+            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+              Drawing from our legacy site and decades of local installs, these are
+              the solutions Calgary families and businesses rely on us for.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {services.map((service, index) => {
-              const Icon = service.icon;
-              return (
-                <Card
-                  key={index}
-                  className="overflow-hidden hover:shadow-lg hover:border-primary/50 transition-all group border-0 bg-white"
-                >
-                  <div className="h-48 bg-gradient-to-br from-primary/5 to-primary/10 flex items-center justify-center overflow-hidden">
-                    <img
-                      src={service.image}
-                      alt={service.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                  </div>
-                  <div className="p-8">
-                    <h3 className="text-xl font-semibold text-foreground mb-3">
-                      {service.title}
-                    </h3>
-                    <p className="text-muted-foreground leading-relaxed">
+          <div className="grid gap-8">
+            {services.map((service, index) => (
+              <article
+                key={service.title}
+                className="relative overflow-hidden rounded-3xl border border-slate-200 shadow-lg"
+              >
+                <div className="absolute inset-0">
+                  <img
+                    src={service.image}
+                    alt={service.title}
+                    className="h-full w-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-br from-slate-900/80 via-slate-900/60 to-slate-900/20"></div>
+                </div>
+                <div className="relative flex flex-col gap-4 md:flex-row md:items-center justify-between p-8 text-white">
+                  <div className="max-w-3xl">
+                    <p className="text-xs uppercase tracking-[0.2em] text-white/60">
+                      Service {String(index + 1).padStart(2, "0")}
+                    </p>
+                    <h3 className="text-2xl font-semibold mb-2">{service.title}</h3>
+                    <p className="text-white/85 leading-relaxed">
                       {service.description}
                     </p>
-                    <div className="mt-4 flex items-center text-primary font-medium text-sm group-hover:translate-x-1 transition-transform">
-                      Learn more <ChevronRight className="w-4 h-4 ml-1" />
-                    </div>
+                    <ul className="mt-4 space-y-2 text-sm text-white/85">
+                      {service.highlights.map((highlight) => (
+                        <li key={highlight} className="flex items-center gap-2">
+                          <span className="h-2 w-2 rounded-full bg-white/80"></span>
+                          {highlight}
+                        </li>
+                      ))}
+                    </ul>
                   </div>
-                </Card>
-              );
-            })}
+                  <Link href="/contact">
+                    <Button
+                      variant="outline"
+                      className="border-white/40 text-white hover:bg-white/10"
+                    >
+                      Learn more
+                      <ChevronRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </Link>
+                </div>
+              </article>
+            ))}
           </div>
         </div>
       </section>
@@ -277,7 +333,7 @@ export default function HomePage() {
                 <p>
                   Our contracts can be canceled with just 30 days notice. We're
                   ensuring a low-risk investment for our consumers with a low
-                  price guarantee.
+                  price guarantee, exactly as promised on our legacy site.
                 </p>
               </div>
 
@@ -294,6 +350,19 @@ export default function HomePage() {
                     Customer Satisfaction
                   </p>
                 </div>
+              </div>
+              <div className="mt-8 space-y-3">
+                {[
+                  "Locally owned & operated in Calgary",
+                  "30-day cancellation policy with low-price guarantee",
+                  "Fully licensed technicians and vetted suppliers",
+                  "Custom solutions for residential, commercial, and industrial sites",
+                ].map((item) => (
+                  <div key={item} className="flex items-start gap-3">
+                    <CheckCircle2 className="w-5 h-5 text-primary mt-0.5" />
+                    <p className="text-sm text-muted-foreground">{item}</p>
+                  </div>
+                ))}
               </div>
             </div>
 
