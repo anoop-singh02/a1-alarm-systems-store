@@ -11,14 +11,61 @@ import {
   MapPin,
   ChevronRight,
   Award,
+  MessageSquare,
+  CheckCircle2,
 } from "lucide-react";
+import { useMemo, useState } from "react";
 
 const assetPath = (file: string) =>
   `${import.meta.env.BASE_URL}${file.replace(/^\/+/, "")}`;
 
 const homeHref = import.meta.env.BASE_URL || "/";
+const navLinks = [
+  { label: "Home", href: "#home" },
+  { label: "About", href: "#about" },
+  { label: "Store", href: "#store" },
+  { label: "FAQ", href: "#faq" },
+  { label: "Contact", href: "#contact" },
+];
+
+const formatCurrency = (value: number) =>
+  new Intl.NumberFormat("en-CA", {
+    style: "currency",
+    currency: "CAD",
+    maximumFractionDigits: 0,
+  }).format(value);
 
 export default function HomePage() {
+  const [propertyType, setPropertyType] = useState<"residential" | "commercial">("residential");
+  const [squareFootage, setSquareFootage] = useState(2200);
+  const [indoorCameras, setIndoorCameras] = useState(3);
+  const [outdoorCameras, setOutdoorCameras] = useState(2);
+  const [audioZones, setAudioZones] = useState(2);
+  const [automation, setAutomation] = useState(true);
+  const [monitoring, setMonitoring] = useState(true);
+
+  const estimatedCost = useMemo(() => {
+    const baseInstall = squareFootage * (propertyType === "commercial" ? 0.18 : 0.12);
+    const cameraCost = indoorCameras * 220 + outdoorCameras * 260;
+    const automationCost = automation ? 450 : 0;
+    const audioCost = audioZones * 175;
+    const subtotal = baseInstall + cameraCost + automationCost + audioCost;
+    const multiplier = propertyType === "commercial" ? 1.2 : 1;
+    return Math.round(subtotal * multiplier);
+  }, [automation, audioZones, indoorCameras, outdoorCameras, propertyType, squareFootage]);
+
+  const monthlyCost = useMemo(() => {
+    if (!monitoring) return 0;
+    return propertyType === "commercial" ? 89 : 59;
+  }, [monitoring, propertyType]);
+
+  const coverageRating = useMemo(() => {
+    const coverage = indoorCameras + outdoorCameras;
+    if (coverage >= 7) return "Comprehensive";
+    if (coverage >= 4) return "Balanced";
+    return "Core Essentials";
+  }, [indoorCameras, outdoorCameras]);
+
   const services = [
     {
       icon: Shield,
@@ -92,34 +139,28 @@ export default function HomePage() {
               A-1 Alarm Systems
             </span>
           </a>
-          <nav className="hidden md:flex items-center gap-8">
-            <a
-              href="#services"
-              className="text-sm font-medium text-foreground hover:text-primary transition-colors"
-            >
-              Services
-            </a>
-            <a
-              href="#about"
-              className="text-sm font-medium text-foreground hover:text-primary transition-colors"
-            >
-              About
-            </a>
-            <a
-              href="#contact"
-              className="text-sm font-medium text-foreground hover:text-primary transition-colors"
-            >
-              Contact
-            </a>
+          <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-muted-foreground">
+            {navLinks.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                className="hover:text-primary transition-colors"
+              >
+                {link.label}
+              </a>
+            ))}
           </nav>
-          <Button className="bg-primary hover:bg-primary/90 text-primary-foreground">
-            Call Now
+          <Button className="rounded-full bg-[#0096c7] hover:bg-[#0077a8] text-white px-6 py-2 text-sm">
+            Get Quote
           </Button>
         </div>
       </header>
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-primary via-primary to-primary/80 text-white py-20 md:py-32">
+      <section
+        id="home"
+        className="relative overflow-hidden bg-gradient-to-br from-[#0096c7] via-[#0080c1] to-[#005aa0] text-white py-20 md:py-32"
+      >
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-0 right-0 w-96 h-96 bg-white rounded-full blur-3xl"></div>
           <div className="absolute bottom-0 left-0 w-96 h-96 bg-white rounded-full blur-3xl"></div>
@@ -132,24 +173,23 @@ export default function HomePage() {
                 Protection You Can Count On
               </h1>
               <p className="text-lg md:text-xl text-white/90 mb-8 leading-relaxed">
-                Rest assured your safe with us. We're a locally owned and
-                operated company dedicated to 100% customer satisfaction for
-                over 20 years.
+                Rest assured you're safe with us. We're a locally owned and
+                operated Calgary company dedicated to 100% customer satisfaction
+                for over 20 years.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button
                   size="lg"
-                  className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold"
+                  className="bg-white text-[#0065a3] hover:bg-white/90 font-semibold"
                 >
                   Free Consultation
-                  <ChevronRight className="w-5 h-5 ml-2" />
                 </Button>
                 <Button
                   size="lg"
                   variant="outline"
                   className="border-white text-white hover:bg-white/10"
                 >
-                  Learn More
+                  Design Your System
                 </Button>
               </div>
             </div>
@@ -323,6 +363,495 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Configurator Section */}
+      <section
+        id="store"
+        className="py-16 md:py-24 bg-gradient-to-b from-white to-muted/30"
+      >
+        <div className="container">
+          <div className="text-center mb-12">
+            <p className="text-sm uppercase tracking-wide text-primary font-semibold mb-3">
+              Design Your Security System
+            </p>
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+              Design Your Perfect Security System
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+              Use our interactive tool to plan your layout, compare packages,
+              and understand how different options impact pricing before we
+              finalize your on-site quote.
+            </p>
+          </div>
+
+          <div className="grid lg:grid-cols-[2fr_1fr] gap-8">
+            <Card className="p-8 border border-primary/10 bg-white shadow-lg">
+              <div className="space-y-8">
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <div>
+                      <p className="text-xs uppercase tracking-wide text-primary font-semibold">
+                        Step 1
+                      </p>
+                      <h3 className="text-xl font-semibold text-foreground">
+                        Property Type
+                      </h3>
+                    </div>
+                    <span className="text-sm text-muted-foreground">
+                      Choose the space you’re securing
+                    </span>
+                  </div>
+                  <div className="flex flex-wrap gap-3">
+                    {[
+                      { id: "residential", label: "Residential" },
+                      { id: "commercial", label: "Commercial" },
+                    ].map((option) => (
+                      <button
+                        key={option.id}
+                        type="button"
+                        onClick={() =>
+                          setPropertyType(option.id as "residential" | "commercial")
+                        }
+                        className={`rounded-full px-4 py-2 text-sm font-medium transition-colors border ${
+                          propertyType === option.id
+                            ? "bg-[#0096c7] text-white border-[#0096c7]"
+                            : "bg-white text-muted-foreground border-border hover:border-primary/40"
+                        }`}
+                      >
+                        {option.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="text-lg font-semibold text-foreground">
+                      Square Footage
+                    </h3>
+                    <span className="text-sm text-muted-foreground">
+                      {squareFootage.toLocaleString()} sq. ft.
+                    </span>
+                  </div>
+                  <input
+                    type="range"
+                    min={800}
+                    max={6000}
+                    step={100}
+                    value={squareFootage}
+                    onChange={(event) => setSquareFootage(Number(event.target.value))}
+                    className="w-full accent-[#0096c7]"
+                  />
+                  <div className="flex justify-between text-xs text-muted-foreground mt-1">
+                    <span>800</span>
+                    <span>6,000</span>
+                  </div>
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <h3 className="text-lg font-semibold">Indoor Cameras</h3>
+                      <span className="text-sm text-muted-foreground">
+                        {indoorCameras}
+                      </span>
+                    </div>
+                    <input
+                      type="range"
+                      min={1}
+                      max={8}
+                      value={indoorCameras}
+                      onChange={(event) => setIndoorCameras(Number(event.target.value))}
+                      className="w-full accent-[#0096c7]"
+                    />
+                    <div className="flex justify-between text-xs text-muted-foreground mt-1">
+                      <span>1</span>
+                      <span>8</span>
+                    </div>
+                  </div>
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <h3 className="text-lg font-semibold">Outdoor Cameras</h3>
+                      <span className="text-sm text-muted-foreground">
+                        {outdoorCameras}
+                      </span>
+                    </div>
+                    <input
+                      type="range"
+                      min={0}
+                      max={8}
+                      value={outdoorCameras}
+                      onChange={(event) => setOutdoorCameras(Number(event.target.value))}
+                      className="w-full accent-[#0096c7]"
+                    />
+                    <div className="flex justify-between text-xs text-muted-foreground mt-1">
+                      <span>0</span>
+                      <span>8</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="text-lg font-semibold">Audio Zones</h3>
+                    <span className="text-sm text-muted-foreground">
+                      {audioZones} rooms
+                    </span>
+                  </div>
+                  <input
+                    type="range"
+                    min={0}
+                    max={6}
+                    value={audioZones}
+                    onChange={(event) => setAudioZones(Number(event.target.value))}
+                    className="w-full accent-[#0096c7]"
+                  />
+                  <div className="flex justify-between text-xs text-muted-foreground mt-1">
+                    <span>0</span>
+                    <span>6</span>
+                  </div>
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-4">
+                  {[{ label: "Smart Automation", state: automation, setter: setAutomation }, { label: "24/7 Monitoring", state: monitoring, setter: setMonitoring }].map(
+                    (toggle) => (
+                      <button
+                        key={toggle.label}
+                        type="button"
+                        onClick={() => toggle.setter((prev) => !prev)}
+                        className={`flex items-center justify-between rounded-2xl border px-4 py-3 transition ${
+                          toggle.state
+                            ? "border-[#0096c7] bg-[#0096c7]/10"
+                            : "border-border hover:border-primary/40"
+                        }`}
+                      >
+                        <span className="text-sm font-semibold text-foreground">
+                          {toggle.label}
+                        </span>
+                        <span
+                          className={`text-xs font-bold uppercase ${
+                            toggle.state ? "text-[#0096c7]" : "text-muted-foreground"
+                          }`}
+                        >
+                          {toggle.state ? "Included" : "Add"}
+                        </span>
+                      </button>
+                    )
+                  )}
+                </div>
+              </div>
+            </Card>
+
+            <div className="space-y-6">
+              <Card className="p-6 bg-white border border-primary/10 shadow-md">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-semibold">System Summary</h3>
+                  <span className="text-xs uppercase tracking-wide text-muted-foreground">
+                    Estimator
+                  </span>
+                </div>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-xs text-muted-foreground uppercase tracking-wide">
+                        Estimated Install
+                      </p>
+                      <p className="text-3xl font-bold text-foreground">
+                        {formatCurrency(estimatedCost)}
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-xs text-muted-foreground uppercase tracking-wide">
+                        Monthly Monitoring
+                      </p>
+                      <p className="text-xl font-semibold text-foreground">
+                        {monthlyCost ? formatCurrency(monthlyCost) : "Optional"}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3 text-sm">
+                    {[
+                      { label: "Total Cameras", value: indoorCameras + outdoorCameras },
+                      { label: "Coverage", value: coverageRating },
+                      { label: "Automation", value: automation ? "Enabled" : "None" },
+                      {
+                        label: "Audio Zones",
+                        value: audioZones ? `${audioZones} rooms` : "Not added",
+                      },
+                    ].map((item) => (
+                      <div
+                        key={item.label}
+                        className="rounded-xl bg-muted/50 px-4 py-3 border border-border"
+                      >
+                        <p className="text-xs text-muted-foreground uppercase tracking-wide">
+                          {item.label}
+                        </p>
+                        <p className="font-semibold text-foreground">{item.value}</p>
+                      </div>
+                    ))}
+                  </div>
+                  <Button className="w-full bg-[#0096c7] hover:bg-[#0077a8] text-white">
+                    Send Configuration with Quote
+                  </Button>
+                  <p className="text-xs text-muted-foreground">
+                    Final pricing is confirmed during your on-site assessment. This
+                    estimate helps us understand your goals before visiting.
+                  </p>
+                </div>
+              </Card>
+              <Card className="p-6 bg-white border border-primary/10 shadow-md">
+                <h3 className="text-lg font-semibold mb-4">Why Build With Us</h3>
+                <ul className="space-y-3 text-sm text-muted-foreground">
+                  {[
+                    "Guided design wizard for homes and businesses",
+                    "Instant configuration summary you can email or print",
+                    "Flexible packages for security, automation, and networking",
+                  ].map((item) => (
+                    <li key={item} className="flex gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-primary mt-0.5" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </Card>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section id="faq" className="py-16 md:py-24">
+        <div className="container">
+          <div className="text-center max-w-3xl mx-auto mb-12">
+            <p className="text-sm uppercase tracking-wide text-primary font-semibold mb-3">
+              FAQ
+            </p>
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+              Frequently Asked Questions
+            </h2>
+            <p className="text-lg text-muted-foreground">
+              Answers to common questions about our systems, pricing, and
+              service process.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            {[
+              {
+                question: "How soon can you install a system?",
+                answer:
+                  "Most residential projects can be scheduled within 1–2 weeks after the site assessment.",
+              },
+              {
+                question: "Do you offer financing or leasing?",
+                answer:
+                  "Yes, we provide flexible payment plans and can bundle monitoring into a monthly rate.",
+              },
+              {
+                question: "Can I monitor my system from my phone?",
+                answer:
+                  "All of our packages include secure mobile access with live video and instant alerts.",
+              },
+              {
+                question: "What happens if I move?",
+                answer:
+                  "We can relocate your equipment or design a new system for the next owner. Contracts are cancellable with 30 days notice.",
+              },
+            ].map((item) => (
+              <Card
+                key={item.question}
+                className="p-6 border border-primary/10 bg-white"
+              >
+                <h3 className="text-lg font-semibold text-foreground mb-3">
+                  {item.question}
+                </h3>
+                <p className="text-muted-foreground leading-relaxed text-sm">
+                  {item.answer}
+                </p>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-16 md:py-24 text-white bg-gradient-to-r from-[#0096c7] to-[#005aa0]">
+        <div className="container text-center max-w-3xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            Ready to Secure Your Property?
+          </h2>
+          <p className="text-lg text-white/90 mb-8">
+            Contact us today for a free consultation and let our experts design
+            the perfect security solution for you.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button className="bg-white text-[#0065a3] hover:bg-white/90 font-semibold">
+              Get Free Quote
+            </Button>
+            <Button
+              variant="outline"
+              className="border-white text-white hover:bg-white/10"
+            >
+              Contact Us
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Section */}
+      <section
+        id="contact"
+        className="py-16 md:py-24 bg-muted/30"
+      >
+        <div className="container">
+          <div className="text-center mb-12">
+            <p className="text-sm uppercase tracking-wide text-primary font-semibold mb-3">
+              Get In Touch
+            </p>
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+              We're here to help with all your security needs
+            </h2>
+            <p className="text-lg text-muted-foreground">
+              Reach out through any of these channels or send us a quick
+              message.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8">
+            <Card className="p-8 border border-primary/10 bg-white">
+              <div className="space-y-6">
+                {[
+                  {
+                    title: "Phone",
+                    lines: ["(403) 258-3749", "Toll-Free: 1-855-258-3749"],
+                    icon: Phone,
+                  },
+                  {
+                    title: "Email",
+                    lines: ["info@a1alarm.ca", "We respond within 24 hours"],
+                    icon: Mail,
+                  },
+                  {
+                    title: "Location",
+                    lines: ["Calgary, Alberta", "Serving Calgary and area"],
+                    icon: MapPin,
+                  },
+                  {
+                    title: "Business Hours",
+                    lines: [
+                      "Mon–Fri: 8 AM - 6 PM",
+                      "Sat: 9 AM - 4 PM, Sun closed",
+                    ],
+                    icon: MessageSquare,
+                  },
+                ].map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <div key={item.title} className="flex gap-4">
+                      <div className="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center">
+                        <Icon className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-foreground">
+                          {item.title}
+                        </h3>
+                        {item.lines.map((line) => (
+                          <p
+                            key={line}
+                            className="text-sm text-muted-foreground leading-tight"
+                          >
+                            {line}
+                          </p>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </Card>
+            <Card className="p-8 border border-primary/10 bg-white">
+              <h3 className="text-xl font-semibold text-foreground mb-6">
+                Send Us a Message
+              </h3>
+              <form className="space-y-4">
+                {["Name", "Email", "Phone"].map((label) => (
+                  <div key={label} className="space-y-2">
+                    <label className="text-sm font-medium text-foreground">
+                      {label}
+                    </label>
+                    <input
+                      type="text"
+                      placeholder={`Enter your ${label.toLowerCase()}`}
+                      className="w-full rounded-lg border border-border bg-muted/30 px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+                    />
+                  </div>
+                ))}
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-foreground">
+                    Message
+                  </label>
+                  <textarea
+                    rows={4}
+                    placeholder="Tell us about your project"
+                    className="w-full rounded-lg border border-border bg-muted/30 px-4 py-3 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 resize-none"
+                  />
+                </div>
+                <Button className="w-full bg-[#0096c7] hover:bg-[#0077a8] text-white">
+                  Send Message
+                </Button>
+              </form>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-slate-900 text-white py-16">
+        <div className="container">
+          <div className="grid md:grid-cols-4 gap-8 mb-10">
+            <div>
+              <div className="flex items-center gap-2 mb-4">
+                <Shield className="w-6 h-6" />
+                <span className="font-bold">A-1 Alarm Systems</span>
+              </div>
+              <p className="text-sm text-white/70">
+                Professional security solutions for over 20 years.
+              </p>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-4">Services</h4>
+              <ul className="space-y-2 text-sm text-white/70">
+                <li>Alarm Systems</li>
+                <li>Video Surveillance</li>
+                <li>Home Automation</li>
+                <li>Central Vacuum</li>
+                <li>Sound Systems</li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-4">Company</h4>
+              <ul className="space-y-2 text-sm text-white/70">
+                <li>Store</li>
+                <li>System Designer</li>
+                <li>FAQ</li>
+                <li>Contact</li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-4">Contact</h4>
+              <ul className="space-y-2 text-sm text-white/70">
+                <li>Calgary, Alberta</li>
+                <li>(403) 258-3749</li>
+                <li>Toll Free: 1-855-258-3749</li>
+                <li>info@a1alarm.ca</li>
+              </ul>
+            </div>
+          </div>
+          <div className="border-t border-white/10 pt-8 text-center text-sm text-white/60">
+            © {new Date().getFullYear()} A-1 Alarm Systems Inc. All rights
+            reserved.
+          </div>
+        </div>
+      </footer>
       {/* CTA Section */}
       <section className="py-16 md:py-24 bg-primary text-white">
         <div className="container">
