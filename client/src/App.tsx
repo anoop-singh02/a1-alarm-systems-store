@@ -7,7 +7,8 @@ import AboutPage from "@/pages/About";
 import ServicesPage from "@/pages/Services";
 import ResidentialCommercialPage from "@/pages/ResidentialCommercial";
 import SecurityOptionsPage from "@/pages/SecurityOptions";
-import { Route, Router, Switch } from "wouter";
+import { useEffect } from "react";
+import { Route, Router, Switch, useLocation } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
@@ -16,9 +17,20 @@ const basePath =
   (import.meta.env.BASE_URL ?? "/").replace(/\/$/, "") || "/";
 const routerBase = basePath === "/" ? "" : basePath;
 
+function ScrollToTop() {
+  const [location] = useLocation();
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  }, [location]);
+
+  return null;
+}
+
 function Routes() {
   return (
     <Router base={routerBase}>
+      <ScrollToTop />
       <Switch>
         <Route path={"/"} component={Home} />
         <Route path={"/about"} component={AboutPage} />

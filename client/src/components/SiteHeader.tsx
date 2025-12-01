@@ -50,12 +50,12 @@ export function SiteHeader({ currentPage }: SiteHeaderProps) {
             </span>
           </span>
         </Link>
-        <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-muted-foreground">
+        <nav className="hidden md:flex items-center gap-7 text-[1.05rem] font-semibold tracking-[0.02em] text-muted-foreground">
           {navItems.map((item) => (
             <Link
               key={item.label}
               href={item.path}
-              className={`hover:text-primary transition-colors ${
+              className={`hover:text-primary transition-colors leading-tight ${
                 currentPage === item.key ? "text-primary" : ""
               }`}
             >
@@ -65,7 +65,7 @@ export function SiteHeader({ currentPage }: SiteHeaderProps) {
         </nav>
         <div className="hidden md:block">
           <Link href="/contact">
-            <Button className="rounded-full bg-[#0096c7] hover:bg-[#0077a8] text-white px-6 py-2 text-sm">
+            <Button className="rounded-full bg-[#0096c7] hover:bg-[#0077a8] text-white px-7 py-2.5 text-base font-semibold tracking-[0.02em]">
               Get Quote
             </Button>
           </Link>
@@ -82,19 +82,19 @@ export function SiteHeader({ currentPage }: SiteHeaderProps) {
       </div>
       {mobileOpen && (
         <div className="md:hidden border-t border-border bg-white">
-          <div className="container py-4 flex flex-col gap-4 text-sm font-medium text-foreground">
+          <div className="container py-4 flex flex-col gap-4 text-lg font-semibold tracking-[0.02em] text-foreground">
             {navItems.map((item) => (
               <Link
                 key={item.label}
                 href={item.path}
-                className="hover:text-primary transition-colors"
+                className="hover:text-primary transition-colors leading-tight"
                 onClick={closeMobile}
               >
                 {item.label}
               </Link>
             ))}
             <Link href="/contact" onClick={closeMobile}>
-              <Button className="w-full bg-[#0096c7] hover:bg-[#0077a8] text-white">
+              <Button className="w-full bg-[#0096c7] hover:bg-[#0077a8] text-white text-lg font-semibold tracking-[0.02em] py-3">
                 Get Quote
               </Button>
             </Link>
