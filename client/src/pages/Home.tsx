@@ -17,23 +17,6 @@ import { Link } from "wouter";
 const assetPath = (file: string) =>
   `${import.meta.env.BASE_URL}${file.replace(/^\/+/, "")}`;
 
-const testimonials = [
-  {
-    quote:
-      "We switched to A-1 Alarm Systems last year and the installation team was outstanding. Monitoring has been rock solid.",
-    author: "Derek P.",
-    role: "Calgary Retail Owner",
-  },
-  {
-    quote:
-      "Their custom automation package streamlined everything in our office. Support is fast and friendly.",
-    author: "Kelly R.",
-    role: "Operations Manager",
-  },
-];
-
-const partners = ["DSC", "Honeywell", "Axis", "Yale"];
-
 const stats = [
   { label: "Years in Calgary", value: "20+" },
   { label: "24/7 Monitoring", value: "ULC" },
@@ -169,11 +152,18 @@ export default function HomePage() {
             </div>
 
             <div className="hidden md:block">
-              <img
-                src={assetPath("security-building.png")}
-                alt="Commercial Security System"
-                className="w-full h-auto rounded-xl shadow-lg"
-              />
+              <div className="relative rounded-xl shadow-lg overflow-hidden bg-black">
+                <video
+                  className="w-full h-full object-cover"
+                  src={assetPath("hero-security.mp4")}
+                  poster={assetPath("security-building.png")}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  aria-label="A-1 Alarm Systems hero background video"
+                />
+              </div>
             </div>
           </div>
           <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -375,51 +365,6 @@ export default function HomePage() {
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Trust Section */}
-      <section id="trust" className="py-16 md:py-24 bg-white">
-        <div className="container grid lg:grid-cols-[1.2fr_1fr] gap-12 items-center">
-          <div>
-            <p className="text-sm uppercase tracking-wide text-primary font-semibold mb-3">
-              Testimonials
-            </p>
-            <h2 className="text-3xl font-bold text-foreground mb-6">
-              Trusted by Calgary homeowners and businesses
-            </h2>
-            <div className="space-y-6">
-              {testimonials.map((testimonial) => (
-                <Card
-                  key={testimonial.author}
-                  className="p-6 border border-primary/10 bg-muted/20"
-                >
-                  <p className="text-lg text-foreground mb-4 leading-relaxed">
-                    “{testimonial.quote}”
-                  </p>
-                  <p className="text-sm font-semibold text-foreground">
-                    {testimonial.author}
-                  </p>
-                  <p className="text-xs text-muted-foreground">{testimonial.role}</p>
-                </Card>
-              ))}
-            </div>
-          </div>
-          <div>
-            <p className="text-sm uppercase tracking-wide text-primary font-semibold mb-3">
-              Partners & Certifications
-            </p>
-            <div className="grid grid-cols-2 gap-4">
-              {partners.map((partner) => (
-                <Card
-                  key={partner}
-                  className="p-6 border border-dashed border-primary/30 text-center text-lg font-semibold text-muted-foreground"
-                >
-                  {partner}
-                </Card>
-              ))}
             </div>
           </div>
         </div>
