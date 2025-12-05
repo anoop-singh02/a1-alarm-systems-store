@@ -12,6 +12,7 @@ import {
   Check,
 } from "lucide-react";
 import { Link } from "wouter";
+import { useEffect } from "react";
 
 const services = [
   {
@@ -116,10 +117,81 @@ const packageFeatures: Array<{
   { label: "Priority Technician Dispatch", basic: false, standard: false, premium: true },
 ];
 
-export default function ServicesPage() {
+const securityOptions = [
+  {
+    title: "Hardwired Systems",
+    detail:
+      "DSC PowerSeries NEO panels with supervised loops and metal enclosures for maximum tamper resistance—ideal for larger homes and UL commercial installs.",
+  },
+  {
+    title: "Wireless / Hybrid Systems",
+    detail:
+      "PowerG encrypted sensors with 2 km range, LTE + Wi-Fi dual-path communicators, and relocatable hardware perfect for renters or heritage spaces.",
+  },
+  {
+    title: "Video Monitoring",
+    detail:
+      "Axis, Hikvision, and Rhombus 4K cameras with smart IR, motorized focus, and NDAA-compliant NVRs that store 30+ days of RAID-protected footage.",
+  },
+  {
+    title: "Internet Monitoring",
+    detail:
+      "Resideo Total Connect and Alarm.com secure tunnels give you live dashboards, push notifications, and audit logs from anywhere.",
+  },
+  {
+    title: "Cellular + Ethernet Backup",
+    detail:
+      "Telguard LTE-M failover radios plus Ethernet keep alarms online even when phone or ISP service drops, meeting insurance and ULC requirements.",
+  },
+  {
+    title: "Motion & Occupancy Sensors",
+    detail:
+      "Dual-tech PIR/microwave detectors with pet immunity, 360° ceiling coverage, and people-counting analytics for showrooms.",
+  },
+  {
+    title: "Life-Safety Sensors",
+    detail:
+      "Monitored smoke, heat, and carbon monoxide devices that cut HVAC, notify responders, and log compliance reports automatically.",
+  },
+  {
+    title: "Environmental Sensors",
+    detail:
+      "Water leak, sump, freeze, and humidity probes tied to text/email alerts—protecting mechanical rooms, cold storage, and luxury finishes.",
+  },
+  {
+    title: "Glass Break & Perimeter Sensors",
+    detail:
+      "Acoustic glass detectors, outdoor beams, and shock contacts covering storefront mullions, bay doors, and fenced yards.",
+  },
+  {
+    title: "Audibles & Duress Devices",
+    detail:
+      "12V outdoor sirens rated for -40°C winters plus wearable and under-desk panic buttons that tie straight into guard dispatch.",
+  },
+];
+
+type ServicesPageProps = {
+  initialSection?: "security-options";
+  headerPageOverride?: "services" | "securityOptions";
+};
+
+export default function ServicesPage({
+  initialSection,
+  headerPageOverride = "services",
+}: ServicesPageProps = {}) {
+  useEffect(() => {
+    if (!initialSection) return;
+    const timeout = window.setTimeout(() => {
+      const el = document.getElementById(initialSection);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }, 60);
+    return () => window.clearTimeout(timeout);
+  }, [initialSection]);
   return (
     <div className="min-h-screen bg-background">
-      <SiteHeader currentPage="services" />
+      <SiteHeader currentPage={headerPageOverride} />
       <section className="bg-gradient-to-r from-[#0096c7] to-[#005aa0] text-white py-20">
         <div className="container max-w-3xl text-center space-y-4">
           <p className="text-sm uppercase tracking-[0.2em] text-white/80">
@@ -291,6 +363,48 @@ export default function ServicesPage() {
                 </tr>
               </tbody>
             </table>
+          </div>
+        </div>
+      </section>
+      <section
+        id="security-options"
+        className="py-16 md:py-24 bg-background border-t border-border/60 scroll-mt-24"
+      >
+        <div className="container space-y-6">
+          <div className="text-center space-y-3 max-w-3xl mx-auto">
+            <p className="text-sm uppercase tracking-[0.3em] text-primary font-semibold">
+              Security Options
+            </p>
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground">
+              Mix and match every device to fit your project
+            </h2>
+            <p className="text-muted-foreground">
+              These are the core components we specify on Calgary installs. Use them as
+              a checklist when customizing your package or stepping through the System
+              Designer.
+            </p>
+          </div>
+          <div className="grid md:grid-cols-2 gap-6">
+            {securityOptions.map((option) => (
+              <Card
+                key={option.title}
+                className="p-6 border border-border/80 bg-white shadow-sm space-y-2"
+              >
+                <h3 className="text-lg font-semibold text-foreground">
+                  {option.title}
+                </h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  {option.detail}
+                </p>
+              </Card>
+            ))}
+          </div>
+          <div className="text-center">
+            <Link href="/store">
+              <Button className="bg-[#0096c7] hover:bg-[#0077a8] text-white">
+                Customize These Options
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
