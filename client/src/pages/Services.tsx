@@ -10,8 +10,13 @@ import {
   Volume2,
   ChevronRight,
   Check,
+  Building2,
 } from "lucide-react";
 import { Link } from "wouter";
+import { useEffect } from "react";
+
+const assetPath = (file: string) =>
+  `${import.meta.env.BASE_URL}${file.replace(/^\/+/, "")}`;
 import { useEffect } from "react";
 
 const services = [
@@ -80,6 +85,7 @@ const packageTiers = [
     setup: "Install from $899",
     description: "Essential protection for condos & starter homes.",
     popular: false,
+    icon: Shield,
   },
   {
     id: "standard",
@@ -88,6 +94,7 @@ const packageTiers = [
     setup: "Install from $1,499",
     description: "Balanced coverage with automation + video.",
     popular: true,
+    icon: HomeIcon,
   },
   {
     id: "premium",
@@ -96,6 +103,7 @@ const packageTiers = [
     setup: "Install from $2,499",
     description: "Full deterrence for luxury homes & businesses.",
     popular: false,
+    icon: Building2,
   },
 ];
 
@@ -235,7 +243,10 @@ export default function ServicesPage({
                 <ul className="space-y-2 text-sm text-muted-foreground">
                   {service.highlights.map((highlight) => (
                     <li key={highlight} className="flex items-center gap-2">
-                      <span className="h-1.5 w-1.5 rounded-full bg-primary"></span>
+                      <span className="relative flex h-4 w-4 items-center justify-center">
+                        <span className="absolute h-full w-full rounded-full border border-primary/40 animate-ping" />
+                        <span className="h-2 w-2 rounded-full bg-primary"></span>
+                      </span>
                       {highlight}
                     </li>
                   ))}
@@ -249,6 +260,42 @@ export default function ServicesPage({
               </Card>
             );
           })}
+        </div>
+        <div className="container mt-12 grid gap-6 md:grid-cols-2">
+          <Card className="overflow-hidden border border-border/70 bg-white shadow-sm p-0">
+            <img
+              src={assetPath("services-lock.jpg")}
+              alt="Smart lock glowing at sunrise on a Calgary home"
+              className="h-56 w-full object-cover"
+              loading="lazy"
+            />
+            <div className="p-6 space-y-2">
+              <h3 className="text-lg font-semibold text-foreground">
+                Residential touchpoints
+              </h3>
+              <p className="text-sm text-muted-foreground">
+                Macro inspection of our DSC + smart lock installs shows the level of
+                detail we carry through every custom home project.
+              </p>
+            </div>
+          </Card>
+          <Card className="overflow-hidden border border-border/70 bg-white shadow-sm p-0">
+            <img
+              src={assetPath("services-warehouse.jpg")}
+              alt="Commercial loading bay with illuminated security cameras"
+              className="h-56 w-full object-cover"
+              loading="lazy"
+            />
+            <div className="p-6 space-y-2">
+              <h3 className="text-lg font-semibold text-foreground">
+                Commercial deterrence
+              </h3>
+              <p className="text-sm text-muted-foreground">
+                High-output IR deterrent cameras cover every loading bay, paired with
+                access readers for after-hours deliveries.
+              </p>
+            </div>
+          </Card>
         </div>
         <div className="container mt-12 grid gap-8 md:grid-cols-2">
           <Card className="p-6 space-y-3">
@@ -304,21 +351,35 @@ export default function ServicesPage({
                   <th className="text-left text-xs uppercase tracking-wider text-muted-foreground">
                     Features
                   </th>
-                  {packageTiers.map((tier) => (
-                    <th key={tier.id} className="text-center">
-                      <div className="relative inline-flex flex-col items-center gap-1 rounded-2xl border bg-white px-4 py-3 shadow-sm">
-                        {tier.popular && (
-                          <span className="absolute -top-3 text-[10px] uppercase tracking-widest bg-primary text-white px-2 py-1 rounded-full">
-                            Most Popular
-                          </span>
-                        )}
-                        <p className="text-sm font-semibold">{tier.name}</p>
-                        <p className="text-2xl font-bold text-foreground">{tier.price}</p>
-                        <p className="text-xs text-muted-foreground">{tier.setup}</p>
-                        <p className="text-xs text-muted-foreground">{tier.description}</p>
-                      </div>
-                    </th>
-                  ))}
+                  {packageTiers.map((tier) => {
+                    const Icon = tier.icon;
+                    return (
+                      <th key={tier.id} className="text-center">
+                        <div
+                          className={`relative inline-flex flex-col items-center gap-1 rounded-2xl border px-4 py-4 shadow-sm ${
+                            tier.popular
+                              ? "bg-gradient-to-br from-cyan-50 to-white border-primary/30"
+                              : "bg-gradient-to-br from-white to-slate-50 border-border"
+                          }`}
+                        >
+                          {tier.popular && (
+                            <span className="absolute -top-3 text-[10px] uppercase tracking-widest bg-primary text-white px-2 py-1 rounded-full">
+                              Most Popular
+                            </span>
+                          )}
+                          <div className="mb-1 flex h-10 w-10 items-center justify-center rounded-full bg-white/70 shadow">
+                            <Icon className="h-5 w-5 text-primary" aria-hidden="true" />
+                          </div>
+                          <p className="text-sm font-semibold">{tier.name}</p>
+                          <p className="text-2xl font-bold text-foreground">{tier.price}</p>
+                          <p className="text-xs text-muted-foreground">{tier.setup}</p>
+                          <p className="text-xs text-muted-foreground text-center">
+                            {tier.description}
+                          </p>
+                        </div>
+                      </th>
+                    );
+                  })}
                 </tr>
               </thead>
               <tbody>

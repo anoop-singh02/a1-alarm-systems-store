@@ -2,18 +2,57 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Footer } from "@/components/Footer";
 import { SiteHeader } from "@/components/SiteHeader";
-import { Award, CheckCircle2, ChevronRight, MapPin } from "lucide-react";
+import {
+  Award,
+  CalendarCheck2,
+  CheckCircle2,
+  ChevronRight,
+  Clock4,
+  MapPin,
+  ShieldCheck,
+  Smile,
+} from "lucide-react";
 import { Link } from "wouter";
+import { useEffect, useState } from "react";
 
 const assetPath = (file: string) =>
   `${import.meta.env.BASE_URL}${file.replace(/^\/+/, "")}`;
 
 const stats = [
-  { label: "Years in Calgary", value: "20+" },
-  { label: "24/7 Monitoring", value: "ULC" },
-  { label: "Contract Exit", value: "30 Days" },
-  { label: "Customer Satisfaction", value: "100%" },
+  { label: "Years in Calgary", value: 20, suffix: "+", icon: ShieldCheck },
+  { label: "24/7 Monitoring", display: "ULC Listed", icon: Clock4 },
+  { label: "Contract Exit", value: 30, suffix: " Days", icon: CalendarCheck2 },
+  { label: "Customer Satisfaction", value: 100, suffix: "%", icon: Smile },
 ];
+
+function CountUp({ value, suffix }: { value: number; suffix?: string }) {
+  const [current, setCurrent] = useState(0);
+
+  useEffect(() => {
+    let start: number | null = null;
+    let animationFrame: number;
+    const duration = 1200;
+
+    const step = (timestamp: number) => {
+      if (start === null) start = timestamp;
+      const progress = Math.min((timestamp - start) / duration, 1);
+      setCurrent(Math.round(progress * value));
+      if (progress < 1) {
+        animationFrame = requestAnimationFrame(step);
+      }
+    };
+
+    animationFrame = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(animationFrame);
+  }, [value]);
+
+  return (
+    <span>
+      {current}
+      {suffix ?? ""}
+    </span>
+  );
+}
 
 export default function HomePage() {
 
@@ -153,17 +192,31 @@ export default function HomePage() {
             </div>
           </div>
           <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4">
-            {stats.map((stat) => (
-              <Card
-                key={stat.label}
-                className="bg-white/10 border-white/20 text-white text-center py-6 backdrop-blur-sm"
-              >
-                <p className="text-3xl font-bold">{stat.value}</p>
-                <p className="text-xs uppercase tracking-wide">
-                  {stat.label}
-                </p>
-              </Card>
-            ))}
+            {stats.map((stat) => {
+              const Icon = stat.icon;
+              return (
+                <Card
+                  key={stat.label}
+                  className="relative overflow-hidden bg-white/10 border-white/20 text-white text-center py-6 backdrop-blur-md"
+                >
+                  <span className="absolute top-3 left-3 h-2 w-2 rounded-full bg-cyan-200 animate-pulse" />
+                  <div className="relative mx-auto mb-3 flex h-12 w-12 items-center justify-center">
+                    <span className="absolute h-full w-full rounded-full bg-white/10 animate-ping" />
+                    <Icon className="relative h-6 w-6" aria-hidden="true" />
+                  </div>
+                  {typeof stat.value === "number" ? (
+                    <p className="text-3xl font-bold">
+                      <CountUp value={stat.value} suffix={stat.suffix} />
+                    </p>
+                  ) : (
+                    <p className="text-2xl font-bold">{stat.display}</p>
+                  )}
+                  <p className="text-xs uppercase tracking-wide mt-2">
+                    {stat.label}
+                  </p>
+                </Card>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -237,7 +290,10 @@ export default function HomePage() {
                         key={highlight}
                         className="flex items-start gap-2 text-sm text-muted-foreground"
                       >
-                        <ChevronRight className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                        <span className="relative mt-0.5 flex h-4 w-4 items-center justify-center">
+                          <span className="absolute h-4 w-4 rounded-full border border-primary/40 animate-ping" />
+                          <span className="h-2 w-2 rounded-full bg-primary"></span>
+                        </span>
                         <span>{highlight}</span>
                       </div>
                     ))}
