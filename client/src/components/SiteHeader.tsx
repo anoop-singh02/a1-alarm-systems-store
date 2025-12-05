@@ -8,7 +8,6 @@ type HeaderPage =
   | "about"
   | "services"
   | "residential"
-  | "securityOptions"
   | "store"
   | "contact";
 
@@ -23,11 +22,6 @@ const navItems: Array<{ label: string; path: string; key: HeaderPage }> = [
     label: "Residential & Commercial",
     path: "/residential-commercial-security",
     key: "residential",
-  },
-  {
-    label: "Security Options",
-    path: "/security-options",
-    key: "securityOptions",
   },
   { label: "Services", path: "/services", key: "services" },
   { label: "Store", path: "/store", key: "store" },
