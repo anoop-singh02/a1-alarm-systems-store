@@ -2,16 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Footer } from "@/components/Footer";
 import { SiteHeader } from "@/components/SiteHeader";
-import {
-  Award,
-  Camera,
-  CheckCircle2,
-  ChevronRight,
-  Home as HomeIcon,
-  Shield,
-  Volume2,
-  Zap,
-} from "lucide-react";
+import { Award, CheckCircle2, ChevronRight, MapPin } from "lucide-react";
 import { Link } from "wouter";
 
 const assetPath = (file: string) =>
@@ -30,56 +21,51 @@ export default function HomePage() {
     {
       title: "Alarm Systems",
       description:
-        "Custom-built security systems tailored to Calgary homes and businesses.",
-      icon: Shield,
+        "Custom A-1 packages built on DSC PowerSeries NEO and Honeywell ProSeries platforms.",
       highlights: [
-        "Hardwired & wireless hybrids",
-        "Keypad + mobile app control",
-        "Professional installation & training",
+        "Encrypted PowerG sensors + LTE / Wi-Fi dual-path communicators",
+        "Honeywell Total Connect and DSC Alarm.com app integrations",
+        "ULC-listed monitoring with 30-day cancellation & labour warranty",
       ],
     },
     {
       title: "Video Surveillance",
       description:
-        "Indoor/outdoor cameras with secure recording and remote viewing.",
-      icon: Camera,
+        "Axis and Hikvision 4K deterrent cameras with NDAA-compliant recording.",
       highlights: [
-        "4K deterrent cameras",
-        "Cloud & local storage options",
-        "AI analytics for alerts",
+        "Smart IR domes, turret cameras, and motorized zoom lenses",
+        "NVRs with RAID storage plus cloud clips for mobile alerts",
+        "AI analytics for line-crossing, loitering, and license plates",
       ],
     },
     {
       title: "Home Automation",
       description:
-        "Lighting, locks, thermostats, and shades unified under one secure app.",
-      icon: HomeIcon,
+        "Resideo, Control4, and Brilliant interfaces that unify lighting, locks, and HVAC.",
       highlights: [
-        "Z-Wave & Wi-Fi integrations",
-        "Scenes for arrive/away routines",
-        "Voice assistant compatibility",
+        "Z-Wave 800 and Matter-ready device support",
+        "Arrive/Away scenes with Lutron, Yale, and Schlage partners",
+        "Voice assistant compatibility plus custom dashboards",
       ],
     },
     {
       title: "Central Vacuum",
       description:
-        "Built-in cleaning systems designed for modern builds and renovations.",
-      icon: Zap,
+        "Cyclo Vac and DrainVac systems engineered for modern builds and retrofits.",
       highlights: [
-        "Powerful low-noise units",
-        "Garage & high ceiling kits",
-        "Maintenance & repairs",
+        "Quiet 600+ air-watt power units with HEPA filtration",
+        "Hide-A-Hose retractable tubing and garage kits",
+        "Annual maintenance programs & bagless conversions",
       ],
     },
     {
       title: "Sound Systems",
       description:
-        "High-quality distributed audio for entertainment, boardrooms, and retail.",
-      icon: Volume2,
+        "Sonos, Denon HEOS, and Origin Acoustics audio plans for homes and commercial venues.",
       highlights: [
-        "Multi-zone streaming",
-        "Discreet in-ceiling speakers",
-        "Custom control keypads",
+        "Multi-zone DSP tuning with architectural and pendant speakers",
+        "Conference room + retail paging presets",
+        "Rack design, surge protection, and remote monitoring",
       ],
     },
   ];
@@ -136,7 +122,7 @@ export default function HomePage() {
                     size="lg"
                     className="bg-white text-[#0065a3] hover:bg-white/90 font-semibold"
                   >
-                    Free Consultation
+                    Talk to an Expert
                   </Button>
                 </Link>
                 <Link href="/store">
@@ -145,16 +131,16 @@ export default function HomePage() {
                     variant="outline"
                     className="border-white text-white hover:bg-white/10"
                   >
-                    Design Your System
+                    Design Your System Now
                   </Button>
                 </Link>
               </div>
             </div>
 
-            <div className="hidden md:block">
-              <div className="relative rounded-xl shadow-lg overflow-hidden bg-black">
+            <div className="mt-10 md:mt-0 w-full">
+              <div className="relative w-full rounded-2xl shadow-2xl overflow-hidden bg-black aspect-[4/3] sm:aspect-[16/10] lg:aspect-[16/9]">
                 <video
-                  className="w-full h-full object-cover"
+                  className="absolute inset-0 w-full h-full object-cover"
                   src={assetPath("hero-security.mp4")}
                   poster={assetPath("security-building.png")}
                   autoPlay
@@ -212,109 +198,102 @@ export default function HomePage() {
 
       {/* Services Section */}
       <section id="services" className="py-16 md:py-24 scroll-mt-24">
-        <div className="container">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              Comprehensive Services
-            </h2>
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-              Drawing from our legacy site and decades of local installs, these are
-              the solutions Calgary families and businesses rely on us for.
-            </p>
-          </div>
+        <div className="container grid lg:grid-cols-[1.1fr_0.9fr] gap-12 items-center">
+          <div>
+            <div className="text-center lg:text-left mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+                Comprehensive Services
+              </h2>
+              <p className="text-lg text-muted-foreground max-w-3xl lg:max-w-none">
+                Drawing from our legacy site and decades of local installs, these are
+                the solutions Calgary families and businesses rely on us for.
+              </p>
+            </div>
 
-          <div className="grid gap-8 md:grid-cols-2">
-            {services.map((service, index) => {
-              const Icon = service.icon;
-              return (
+            <div className="grid sm:grid-cols-2 gap-6">
+              {services.map((service) => (
                 <Card
                   key={service.title}
-                  className="h-full border border-slate-200 shadow-md hover:shadow-lg transition-shadow"
+                  className="h-full flex flex-col gap-4 p-6 border border-border/80 bg-white/95 shadow-sm"
                 >
-                  <div className="p-6">
-                    <div className="flex items-center gap-4 mb-4">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
-                        <Icon className="w-6 h-6" aria-hidden="true" />
-                      </div>
-                      <div>
-                        <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-                          Service {String(index + 1).padStart(2, "0")}
-                        </p>
-                        <h3 className="text-xl font-semibold text-foreground">
-                          {service.title}
-                        </h3>
-                      </div>
-                    </div>
-                    <p className="text-muted-foreground leading-relaxed">
+                  <div>
+                    <h3 className="text-lg font-semibold text-foreground">
+                      {service.title}
+                    </h3>
+                    <p className="text-sm text-muted-foreground mt-2">
                       {service.description}
                     </p>
-                    <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
-                      {service.highlights.map((highlight) => (
-                        <li key={highlight} className="flex items-center gap-2">
-                          <span className="h-1.5 w-1.5 rounded-full bg-primary"></span>
-                          {highlight}
-                        </li>
-                      ))}
-                    </ul>
-                    <Link href="/contact">
-                      <Button
-                        variant="ghost"
-                        className="mt-6 px-0 text-primary hover:text-primary"
-                      >
-                        Learn more
-                        <ChevronRight className="ml-2 h-4 w-4" />
-                      </Button>
-                    </Link>
                   </div>
+                  <ul className="space-y-2">
+                    {service.highlights.map((highlight) => (
+                      <li
+                        key={highlight}
+                        className="flex items-start gap-2 text-sm text-muted-foreground"
+                      >
+                        <ChevronRight className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                        <span>{highlight}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </Card>
-              );
-            })}
+              ))}
+            </div>
+          </div>
+
+          <div className="relative rounded-2xl overflow-hidden shadow-2xl ring-1 ring-black/10">
+            <img
+              src={assetPath("services-collage.jpg")}
+              alt="Collage showing security camera, smart home control, and central vacuum inlet"
+              className="w-full h-full object-cover"
+              loading="lazy"
+            />
+            <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-black/15 pointer-events-none" />
           </div>
         </div>
       </section>
 
       {/* About Section */}
       <section id="about" className="py-16 md:py-24 bg-muted/30 scroll-mt-24">
-        <div className="container">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div>
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
-                About A-1 Alarm Systems
-              </h2>
-              <div className="space-y-4 text-muted-foreground leading-relaxed">
-                <p>
-                  We are a locally owned and operated company with one goal in
-                  mind: 100% customer satisfaction. We have sustained our
-                  business for over 20 years by providing protection you can
-                  trust and rely on.
-                </p>
-                <p>
-                  We don't believe in a standard alarm system for all of our
-                  service installations. Our systems are custom built with each
-                  customer's unique individual needs and requirements in mind.
-                </p>
-                <p>
-                  Our contracts can be canceled with just 30 days notice. We're
-                  ensuring a low-risk investment for our consumers with a low
-                  price guarantee, exactly as promised on our legacy site.
-                </p>
-              </div>
+        <div className="container grid lg:grid-cols-[1.1fr_0.9fr] gap-12 items-center">
+          <div>
+            <p className="text-sm uppercase tracking-[0.3em] text-primary font-semibold mb-3">
+              About A-1
+            </p>
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
+              Proudly protecting Calgary for over 20 years
+            </h2>
+            <div className="space-y-4 text-muted-foreground leading-relaxed">
+              <p>
+                We are a locally owned and operated company with one goal in mind:
+                100% customer satisfaction. We have sustained our business for over
+                two decades by providing protection you can trust and rely on.
+              </p>
+              <p>
+                We do not believe in cookie-cutter security. Every installation is
+                planned around your property, lifestyle, and how you prefer to
+                manage your system.
+              </p>
+              <p>
+                Our contracts can be canceled with just 30 days notice, backed by a
+                low price guarantee—exactly as promised on our legacy site.
+              </p>
+            </div>
 
-              <div className="mt-8 grid grid-cols-2 gap-6">
-                <div>
-                  <div className="text-3xl font-bold text-primary mb-2">20+</div>
-                  <p className="text-sm text-muted-foreground">
-                    Years of Experience
-                  </p>
-                </div>
-                <div>
-                  <div className="text-3xl font-bold text-primary mb-2">100%</div>
-                  <p className="text-sm text-muted-foreground">
-                    Customer Satisfaction
-                  </p>
-                </div>
+            <div className="mt-8 grid grid-cols-2 gap-6">
+              <div>
+                <div className="text-3xl font-bold text-primary mb-2">20+</div>
+                <p className="text-sm text-muted-foreground">Years of Experience</p>
               </div>
-              <div className="mt-8 space-y-3">
+              <div>
+                <div className="text-3xl font-bold text-primary mb-2">100%</div>
+                <p className="text-sm text-muted-foreground">
+                  Customer Satisfaction
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-8 grid md:grid-cols-[1.1fr_0.9fr] gap-6">
+              <div className="space-y-3">
                 {[
                   "Locally owned & operated in Calgary",
                   "30-day cancellation policy with low-price guarantee",
@@ -327,43 +306,57 @@ export default function HomePage() {
                   </div>
                 ))}
               </div>
+              <div className="bg-gradient-to-br from-primary/10 to-accent/10 rounded-2xl p-6 border border-primary/20">
+                <div className="space-y-4">
+                  {[
+                    {
+                      title: "Custom Solutions",
+                      description: "Tailored security for every property type.",
+                    },
+                    {
+                      title: "Professional Service",
+                      description: "Expert installation & friendly training.",
+                    },
+                    {
+                      title: "Responsive Support",
+                      description: "Local team on call when you need us.",
+                    },
+                  ].map((item) => (
+                    <div key={item.title} className="flex items-start gap-3">
+                      <Award className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                      <div>
+                        <h4 className="font-semibold text-foreground leading-tight">
+                          {item.title}
+                        </h4>
+                        <p className="text-sm text-muted-foreground">
+                          {item.description}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
+          </div>
 
-            <div className="bg-gradient-to-br from-primary/10 to-accent/10 rounded-2xl p-8 border border-primary/20">
-              <div className="space-y-6">
-                <div className="flex items-start gap-4">
-                  <Award className="w-6 h-6 text-primary flex-shrink-0 mt-1" />
-                  <div>
-                    <h4 className="font-semibold text-foreground mb-1">
-                      Custom Solutions
-                    </h4>
-                    <p className="text-sm text-muted-foreground">
-                      Tailored security systems for your specific needs
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4">
-                  <Award className="w-6 h-6 text-primary flex-shrink-0 mt-1" />
-                  <div>
-                    <h4 className="font-semibold text-foreground mb-1">
-                      Professional Service
-                    </h4>
-                    <p className="text-sm text-muted-foreground">
-                      Expert installation and ongoing support
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4">
-                  <Award className="w-6 h-6 text-primary flex-shrink-0 mt-1" />
-                  <div>
-                    <h4 className="font-semibold text-foreground mb-1">
-                      Responsive Support
-                    </h4>
-                    <p className="text-sm text-muted-foreground">
-                      Always available when you need us
-                    </p>
-                  </div>
-                </div>
+          <div className="relative rounded-2xl overflow-hidden shadow-2xl ring-1 ring-black/10">
+            <img
+              src={assetPath("about-calgary.jpg")}
+              alt="A-1 Alarm Systems truck parked in a Calgary neighbourhood at sunset"
+              className="w-full h-full object-cover"
+              loading="lazy"
+            />
+            <div className="absolute bottom-4 left-4 right-4 sm:right-auto sm:max-w-xs bg-black/70 text-white rounded-2xl p-4 flex items-center gap-3 shadow-lg">
+              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-white/20">
+                <MapPin className="w-5 h-5" aria-hidden="true" />
+              </div>
+              <div>
+                <p className="text-xs uppercase tracking-[0.3em] text-white/70">
+                  Calgary Based
+                </p>
+                <p className="text-sm font-semibold leading-tight">
+                  On-site installs across YYC & surrounding area
+                </p>
               </div>
             </div>
           </div>

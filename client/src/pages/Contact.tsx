@@ -3,8 +3,31 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Mail, MapPin, Phone } from "lucide-react";
+import { useEffect, useState } from "react";
+
+type ConfigSummary = {
+  propertyType: string;
+  squareFootage: number;
+  indoorCameras: number;
+  outdoorCameras: number;
+  audioZones: number;
+  automation: boolean;
+  monitoring: boolean;
+  estimatedCost: number;
+  monthlyCost: number;
+  coverageRating: string;
+  createdAt?: string;
+};
+
+const formatCurrency = (value: number) =>
+  new Intl.NumberFormat("en-CA", {
+    style: "currency",
+    currency: "CAD",
+    maximumFractionDigits: 0,
+  }).format(value);
 
 export default function ContactPage() {
+  const [configSummary, setConfigSummary] = useState<ConfigSummary | null>(null);
   const contactMethods = [
     {
       title: "Phone",
@@ -22,6 +45,21 @@ export default function ContactPage() {
       icon: MapPin,
     },
   ];
+
+  useEffect(() => {
+    const stored = localStorage.getItem("a1-config-draft");
+    if (!stored) return;
+    try {
+      setConfigSummary(JSON.parse(stored));
+    } catch {
+      setConfigSummary(null);
+    }
+  }, []);
+
+  const clearConfigSummary = () => {
+    localStorage.removeItem("a1-config-draft");
+    setConfigSummary(null);
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -69,7 +107,66 @@ export default function ContactPage() {
             })}
           </div>
 
-          <Card className="p-8 border border-primary/10 bg-white max-w-4xl mx-auto">
+          <Card className="p-8 border border-primary/10 bg-white max-w-4xl mx-auto space-y-6">
+            {configSummary && (
+              <div className="rounded-2xl border border-primary/20 bg-primary/5 p-4 text-sm text-muted-foreground space-y-3">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm font-semibold text-foreground">
+                    Configuration attached from System Designer
+                  </p>
+                  <button
+                    type="button"
+                    onClick={clearConfigSummary}
+                    className="text-xs text-primary hover:underline"
+                  >
+                    Clear
+                  </button>
+                </div>
+                <div className="grid sm:grid-cols-2 gap-3">
+                  <div>
+                    <p className="text-xs uppercase tracking-wide text-muted-foreground">
+                      Property Type
+                    </p>
+                    <p className="font-semibold text-foreground">
+                      {configSummary.propertyType}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-xs uppercase tracking-wide text-muted-foreground">
+                      Estimated Install
+                    </p>
+                    <p className="font-semibold text-foreground">
+                      {formatCurrency(configSummary.estimatedCost)}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-xs uppercase tracking-wide text-muted-foreground">
+                      Cameras
+                    </p>
+                    <p className="font-semibold text-foreground">
+                      {configSummary.indoorCameras + configSummary.outdoorCameras}{" "}
+                      total ({configSummary.coverageRating})
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-xs uppercase tracking-wide text-muted-foreground">
+                      Monitoring
+                    </p>
+                    <p className="font-semibold text-foreground">
+                      {configSummary.monitoring
+                        ? formatCurrency(configSummary.monthlyCost)
+                        : "Not requested"}
+                    </p>
+                  </div>
+                </div>
+                <p className="text-xs">
+                  Sent on:{" "}
+                  {configSummary.createdAt
+                    ? new Date(configSummary.createdAt).toLocaleString()
+                    : "today"}
+                </p>
+              </div>
+            )}
             <h2 className="text-2xl font-semibold text-foreground mb-6">
               Send us a message
             </h2>
@@ -132,13 +229,13 @@ export default function ContactPage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button className="bg-white text-[#0065a3] hover:bg-white/90 font-semibold">
-              Schedule Consultation
+              Book Your Consultation
             </Button>
             <Button
               variant="outline"
               className="border-white text-white hover:bg-white/10"
             >
-              Call (403) 258-3749
+              Call Our Calgary Team
             </Button>
           </div>
         </div>

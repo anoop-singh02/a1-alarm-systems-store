@@ -16,56 +16,56 @@ const services = [
   {
     title: "Alarm Systems",
     description:
-      "Custom-built security systems tailored to Calgary homes and businesses.",
+      "Custom A-1 alarm packages using DSC PowerSeries NEO and Honeywell ProSeries hardware.",
     icon: Shield,
     highlights: [
-      "DSC and Honeywell panels",
-      "Mobile app arm/disarm",
-      "Professional installation",
+      "PowerG encrypted sensors + LTE/Wi-Fi dual-path radios",
+      "Resideo Total Connect and Alarm.com mobile control",
+      "ULC monitoring with cellular backup & 30-day cancellation",
     ],
   },
   {
     title: "Video Surveillance",
     description:
-      "Indoor/outdoor cameras with secure recording and remote viewing.",
+      "NDAA-compliant Axis + Hikvision 4K cameras with secure recording and analytics.",
     icon: Camera,
     highlights: [
-      "4K deterrent cameras",
-      "Cloud & local storage options",
-      "AI analytics for alerts",
+      "Motorized zoom lenses + smart IR deterrence",
+      "Hybrid NVRs with RAID + encrypted cloud backups",
+      "AI line-crossing, loitering, and license plate detection",
     ],
   },
   {
     title: "Home Automation",
     description:
-      "Lighting, locks, thermostats, and shades unified under one secure app.",
+      "Resideo, Control4, and Brilliant dashboards connecting lighting, locks, HVAC, and shades.",
     icon: HomeIcon,
     highlights: [
-      "Arrive/away routines",
-      "Smart lock integrations",
-      "Voice assistant compatibility",
+      "Z-Wave 800 / Matter-ready scenes for arrive & away",
+      "Lutron, Yale, Schlage, and August integrations",
+      "Voice assistant + mobile widgets with audit trails",
     ],
   },
   {
     title: "Central Vacuum",
     description:
-      "Built-in cleaning systems designed for modern builds and renovations.",
+      "Cyclo Vac and DrainVac central vacuums sized for new builds and retrofits.",
     icon: Zap,
     highlights: [
-      "Low-noise units",
-      "Garage & workshop kits",
-      "Maintenance & repairs",
+      "600+ air-watt quiet motors w/ HEPA filtration",
+      "Hide-A-Hose retractable + garage service kits",
+      "Bagless conversions + annual tune-ups",
     ],
   },
   {
     title: "Sound Systems",
     description:
-      "High-quality distributed audio for entertainment, boardrooms, and retail.",
+      "Sonos, Denon HEOS, and Origin Acoustics distributed audio engineered by our designers.",
     icon: Volume2,
     highlights: [
-      "Multi-zone streaming",
-      "Discreet speaker installs",
-      "Custom control keypads",
+      "Multi-zone DSP + architectural/pendant speakers",
+      "Boardroom conferencing + retail paging presets",
+      "Equipment racks with surge + remote diagnostics",
     ],
   },
 ];
@@ -115,7 +115,7 @@ export default function ServicesPage() {
                 </ul>
                 <Link href="/contact">
                   <Button variant="ghost" className="px-0 text-primary">
-                    Talk to an expert
+                    Talk to an Expert
                     <ChevronRight className="ml-2 h-4 w-4" />
                   </Button>
                 </Link>
@@ -132,9 +132,10 @@ export default function ServicesPage() {
               Dive deeper into wired vs. wireless installs, monitoring, and
               property-value benefits carried forward from our legacy site.
             </p>
-            <Link href="/residential-commercial-security">
+            <Link href="/residential-commercial-security#residential">
               <Button variant="ghost" className="px-0 text-primary">
-                View details <ChevronRight className="ml-2 h-4 w-4" />
+                Talk to a Residential Expert{" "}
+                <ChevronRight className="ml-2 h-4 w-4" />
               </Button>
             </Link>
           </Card>
@@ -148,7 +149,7 @@ export default function ServicesPage() {
             </p>
             <Link href="/security-options">
               <Button variant="ghost" className="px-0 text-primary">
-                Explore options <ChevronRight className="ml-2 h-4 w-4" />
+                Browse Every Device <ChevronRight className="ml-2 h-4 w-4" />
               </Button>
             </Link>
           </Card>

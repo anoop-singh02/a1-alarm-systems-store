@@ -1,7 +1,9 @@
 import { Footer } from "@/components/Footer";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { CheckCircle2 } from "lucide-react";
+import { Link } from "wouter";
 
 const wiredBenefits = [
   "Hardwired connections between sensors and control panel for reliability",
@@ -19,6 +21,18 @@ const monitoringHighlights = [
   "Auto-tested signals from every sensor to the A-1 Alarm Control Centre",
   "24/7 monitoring with immediate dispatch of emergency personnel",
   "Custom notification lists for business owners, property managers, and families",
+];
+
+const residentialHighlights = [
+  "DSC / Honeywell smart panels with connected locks, garage, and thermostat scenes",
+  "Video doorbells + 4K exterior domes tuned for Calgary winters",
+  "Insurance-ready documentation plus 30-day cancellation flexibility",
+];
+
+const commercialHighlights = [
+  "ULC-compliant monitoring with open/close reports and scheduled arming",
+  "Enterprise video platforms with multi-site dashboards + NDAA hardware",
+  "Access control, panic buttons, and HVAC/lighting automation for ROI",
 ];
 
 export default function ResidentialCommercialPage() {
@@ -61,39 +75,101 @@ export default function ResidentialCommercialPage() {
             </ul>
           </Card>
 
-          <div className="grid md:grid-cols-2 gap-8">
-            <Card className="p-8 space-y-4">
-              <h3 className="text-xl font-semibold text-foreground">Wired Systems</h3>
+          <div className="grid gap-8">
+            <Card id="residential" className="p-8 space-y-4">
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                <div>
+                  <p className="text-xs uppercase tracking-[0.3em] text-primary font-semibold">
+                    Residential
+                  </p>
+                  <h3 className="text-xl font-semibold text-foreground mt-1">
+                    Modern smart homes & upscale infills
+                  </h3>
+                </div>
+                <Link href="/store?type=residential">
+                  <Button variant="outline" className="rounded-full px-4 py-2">
+                    Design for My Home
+                  </Button>
+                </Link>
+              </div>
               <p className="text-muted-foreground leading-relaxed">
-                Components such as sensors and the main control panel are connected
-                via hard wiring. Wired systems offer proven reliability and support
-                advanced devices.
+                From starter condos to custom estates, we combine hardwired DSC systems
+                with wireless PowerG peripherals and Resideo automation to cover every
+                entry, garage, and smart device.
               </p>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                {wiredBenefits.map((benefit) => (
-                  <li key={benefit} className="flex items-center gap-2">
-                    <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-                    {benefit}
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <h4 className="text-sm font-semibold text-foreground mb-2">
+                    Why homeowners choose wired
+                  </h4>
+                  <ul className="space-y-2 text-sm text-muted-foreground">
+                    {wiredBenefits.map((benefit) => (
+                      <li key={benefit} className="flex items-center gap-2">
+                        <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+                        {benefit}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="text-sm font-semibold text-foreground mb-2">
+                    Why homeowners choose wireless
+                  </h4>
+                  <ul className="space-y-2 text-sm text-muted-foreground">
+                    {wirelessBenefits.map((benefit) => (
+                      <li key={benefit} className="flex items-center gap-2">
+                        <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+                        {benefit}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+              <ul className="space-y-2 text-sm text-muted-foreground border-t border-border pt-4">
+                {residentialHighlights.map((highlight) => (
+                  <li key={highlight} className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-primary" />
+                    {highlight}
                   </li>
                 ))}
               </ul>
+              <Link href="/contact">
+                <Button className="mt-4">Talk to a Home Specialist</Button>
+              </Link>
             </Card>
 
-            <Card className="p-8 space-y-4">
-              <h3 className="text-xl font-semibold text-foreground">Wireless Systems</h3>
+            <Card id="commercial" className="p-8 space-y-4">
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                <div>
+                  <p className="text-xs uppercase tracking-[0.3em] text-primary font-semibold">
+                    Commercial
+                  </p>
+                  <h3 className="text-xl font-semibold text-foreground mt-1">
+                    Offices, retail, light industrial, and multi-site
+                  </h3>
+                </div>
+                <Link href="/store?type=commercial">
+                  <Button variant="outline" className="rounded-full px-4 py-2">
+                    Configure My Facility
+                  </Button>
+                </Link>
+              </div>
               <p className="text-muted-foreground leading-relaxed">
-                Ideal for renters or finished spaces, wireless systems require minimal
-                drilling and work even without a home phone line. They can be taken
-                apart and moved with you.
+                Businesses rely on hybrid wiring, access control, analytics-driven
+                cameras, and managed networking. We coordinate after-hours installs and
+                provide opening/closing reports for compliance.
               </p>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                {wirelessBenefits.map((benefit) => (
-                  <li key={benefit} className="flex items-center gap-2">
-                    <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-                    {benefit}
+                {commercialHighlights.map((highlight) => (
+                  <li key={highlight} className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-primary" />
+                    {highlight}
                   </li>
                 ))}
               </ul>
+              <Link href="/contact">
+                <Button className="mt-4">Talk to a Commercial Specialist</Button>
+              </Link>
             </Card>
           </div>
 

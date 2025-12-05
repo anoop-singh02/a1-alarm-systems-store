@@ -3,7 +3,8 @@ import { Card } from "@/components/ui/card";
 import { Footer } from "@/components/Footer";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Camera, CheckCircle2 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useSearch } from "wouter";
 
 const formatCurrency = (value: number) =>
   new Intl.NumberFormat("en-CA", {
@@ -13,6 +14,7 @@ const formatCurrency = (value: number) =>
   }).format(value);
 
 export default function DesignSystemPage() {
+  const search = useSearch();
   const [propertyType, setPropertyType] = useState<"residential" | "commercial">(
     "residential",
   );
@@ -22,6 +24,28 @@ export default function DesignSystemPage() {
   const [audioZones, setAudioZones] = useState(2);
   const [automation, setAutomation] = useState(true);
   const [monitoring, setMonitoring] = useState(true);
+
+  const ecwidStoreId = import.meta.env.VITE_ECWID_STORE_ID;
+
+  useEffect(() => {
+    const params = new URLSearchParams(search ?? "");
+    const type = params.get("type");
+    if (type === "residential" || type === "commercial") {
+      setPropertyType(type);
+    }
+  }, [search]);
+
+  useEffect(() => {
+    if (!ecwidStoreId) return;
+    const script = document.createElement("script");
+    script.src = `https://app.ecwid.com/script.js?${ecwidStoreId}`;
+    script.async = true;
+    script.defer = true;
+    document.body.appendChild(script);
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, [ecwidStoreId]);
 
   const estimatedCost = useMemo(() => {
     const baseInstall =
@@ -45,6 +69,45 @@ export default function DesignSystemPage() {
     if (coverage >= 4) return "Balanced";
     return "Core Essentials";
   }, [indoorCameras, outdoorCameras]);
+
+  const configurationSummary = useMemo(
+    () => ({
+      propertyType,
+      squareFootage,
+      indoorCameras,
+      outdoorCameras,
+      audioZones,
+      automation,
+      monitoring,
+      estimatedCost,
+      monthlyCost,
+      coverageRating,
+    }),
+    [
+      audioZones,
+      automation,
+      coverageRating,
+      estimatedCost,
+      indoorCameras,
+      monthlyCost,
+      monitoring,
+      outdoorCameras,
+      propertyType,
+      squareFootage,
+    ],
+  );
+
+  const handleSendConfiguration = () => {
+    localStorage.setItem(
+      "a1-config-draft",
+      JSON.stringify({
+        ...configurationSummary,
+        createdAt: new Date().toISOString(),
+      }),
+    );
+    const basePath = (import.meta.env.BASE_URL ?? "/").replace(/\/$/, "");
+    window.location.assign(`${basePath}/contact?configDraft=1`);
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -320,7 +383,11 @@ export default function DesignSystemPage() {
                       </div>
                     ))}
                   </div>
-                  <Button className="w-full bg-[#0096c7] hover:bg-[#0077a8] text-white">
+                  <Button
+                    type="button"
+                    onClick={handleSendConfiguration}
+                    className="w-full bg-[#0096c7] hover:bg-[#0077a8] text-white"
+                  >
                     Send Configuration with Quote
                   </Button>
                   <p className="text-xs text-muted-foreground">
@@ -343,6 +410,44 @@ export default function DesignSystemPage() {
                     </li>
                   ))}
                 </ul>
+              </Card>
+              <Card className="p-6 bg-white border border-primary/10 shadow-md">
+                <h3 className="text-lg font-semibold mb-2">Visualize Coverage</h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Drag sliders above, then use this mini plan to imagine where cameras
+                  land. On desktop you can drop icons into our Ecwid kit builder.
+                </p>
+                <div className="grid grid-cols-2 gap-3 h-48">
+                  {[
+                    { label: "Entry", cameras: 1 },
+                    { label: "Great Room", cameras: 2 },
+                    { label: "Garage", cameras: 1 },
+                    { label: "Yard", cameras: 2 },
+                  ].map((zone) => (
+                    <div
+                      key={zone.label}
+                      className="relative rounded-xl border border-dashed border-primary/40 bg-gradient-to-br from-slate-50 to-slate-100 p-3 flex flex-col justify-between"
+                    >
+                      <p className="text-xs font-semibold text-muted-foreground">
+                        {zone.label}
+                      </p>
+                      <div className="flex gap-1">
+                        {Array.from({ length: zone.cameras }).map((_, index) => (
+                          <div
+                            key={`${zone.label}-${index}`}
+                            className="h-7 w-7 rounded-full bg-white shadow flex items-center justify-center text-primary"
+                          >
+                            <Camera className="w-3.5 h-3.5" />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <p className="text-xs text-muted-foreground mt-3">
+                  Tip: Residential buyers usually start with cameras in Entry, Garage,
+                  and Yard; commercial lots focus on shipping doors and POS areas.
+                </p>
               </Card>
             </div>
           </div>

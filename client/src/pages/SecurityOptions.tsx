@@ -6,52 +6,52 @@ const options = [
   {
     title: "Hard Wired Systems",
     detail:
-      "Ideal for homes and businesses, wired systems provide dependable protection against burglars and intruders.",
+      "DSC PowerSeries NEO panels with supervised loops and metal cans for maximum tamper resistance—ideal for larger homes and UL commercial installs.",
   },
   {
-    title: "Wireless Systems",
+    title: "Wireless / Hybrid Systems",
     detail:
-      "Perfect for renters and finished spaces—minimal drilling and flexible configurations.",
+      "PowerG encrypted sensors with 2 km range, LTE + Wi-Fi dual-path communicators, and relocatable hardware perfect for renters or heritage spaces.",
   },
   {
     title: "Video Monitoring",
     detail:
-      "Strategic placement at entry points, driveways, or parking areas adds visual verification and peace of mind.",
+      "Axis, Hikvision, and Rhombus 4K cameras with smart IR, motorized focus, and NDAA-compliant NVRs that hold 30+ days of RAID-protected footage.",
   },
   {
     title: "Internet Monitoring",
     detail:
-      "Pair digital video with secure remote access so you can check in on your property from anywhere.",
+      "Resideo Total Connect and Alarm.com secure tunnels give you live dashboards, push notifications, and audit logs from anywhere.",
   },
   {
-    title: "Telephone / Cellular Backup",
+    title: "Cellular + Ethernet Backup",
     detail:
-      "Keep your system online even without a traditional landline. Cellular backup ensures signals always reach our monitoring centre.",
+      "Telguard LTE-M failover radios plus Ethernet keep alarms online even when phone or ISP service drops, meeting insurance and ULC requirements.",
   },
   {
-    title: "Motion Detectors",
+    title: "Motion & Occupancy Sensors",
     detail:
-      "High-sensitivity sensors with pet immunity to prevent false alarms while detecting real movement.",
+      "Dual-tech PIR/microwave detectors with pet immunity, ceiling 360° coverage, and people-counting analytics for showrooms.",
   },
   {
-    title: "Smoke & Carbon Monoxide Detectors",
+    title: "Life-Safety Sensors",
     detail:
-      "Life-safety devices that trigger your alarm and alert responders during fires or CO events.",
+      "Monitored smoke, heat, and carbon monoxide devices that cut HVAC, notify responders, and log compliance reports automatically.",
   },
   {
-    title: "Heat, Water & Freeze Sensors",
+    title: "Environmental Sensors",
     detail:
-      "Early warning for extreme temperature changes or leaks to prevent costly damage to homes, businesses, or cottages.",
+      "Water leak, sump, freeze, and humidity probes tied to text/email alerts—protecting mechanical rooms, cold storage, and luxury finishes.",
   },
   {
-    title: "Glass Break & Passive Infrared Sensors",
+    title: "Glass Break & Perimeter Sensors",
     detail:
-      "Detect glass shattering or infrared energy changes—ideal for storefronts and large open areas.",
+      "Acoustic glass detectors, outdoor beams, and shock contacts covering storefront mullions, bay doors, and fenced yards.",
   },
   {
-    title: "Outdoor Sirens & Panic Buttons",
+    title: "Audibles & Duress Devices",
     detail:
-      "Deter intruders and alert neighbours with loud exterior sirens; panic buttons summon help instantly.",
+      "12V outdoor sirens rated for -40°C winters plus wearable and under-desk panic buttons that tie straight into guard dispatch.",
   },
 ];
 
