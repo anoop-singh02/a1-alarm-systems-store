@@ -199,42 +199,49 @@ export default function HomePage() {
       {/* Services Section */}
       <section id="services" className="py-16 md:py-24 scroll-mt-24">
         <div className="container grid lg:grid-cols-[1.1fr_0.9fr] gap-12 items-center">
-          <div>
-            <div className="text-center lg:text-left mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+          <div className="space-y-8">
+            <div className="space-y-3">
+              <p className="text-sm uppercase tracking-[0.3em] text-primary font-semibold">
                 Comprehensive Services
+              </p>
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground">
+                One partner for alarms, video, automation, and more
               </h2>
               <p className="text-lg text-muted-foreground max-w-3xl lg:max-w-none">
-                Drawing from our legacy site and decades of local installs, these are
-                the solutions Calgary families and businesses rely on us for.
+                We engineer complete ecosystems—pairing DSC/Honeywell alarms with 4K
+                cameras, automation, vacuums, and audio across Calgary homes and
+                businesses.
               </p>
             </div>
-
-            <div className="grid sm:grid-cols-2 gap-6">
+            <div className="space-y-4">
               {services.map((service) => (
                 <Card
                   key={service.title}
-                  className="h-full flex flex-col gap-4 p-6 border border-border/80 bg-white/95 shadow-sm"
+                  className="flex flex-col gap-4 p-5 border border-border/70 bg-white shadow-sm"
                 >
-                  <div>
-                    <h3 className="text-lg font-semibold text-foreground">
+                  <div className="flex items-center gap-4">
+                    <div className="h-12 w-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center font-semibold">
+                      {service.title
+                        .split(" ")
+                        .map((word) => word[0])
+                        .slice(0, 2)
+                        .join("")}
+                    </div>
+                    <h3 className="text-xl font-semibold text-foreground">
                       {service.title}
                     </h3>
-                    <p className="text-sm text-muted-foreground mt-2">
-                      {service.description}
-                    </p>
                   </div>
-                  <ul className="space-y-2">
+                  <div className="grid sm:grid-cols-2 gap-3">
                     {service.highlights.map((highlight) => (
-                      <li
+                      <div
                         key={highlight}
                         className="flex items-start gap-2 text-sm text-muted-foreground"
                       >
                         <ChevronRight className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
                         <span>{highlight}</span>
-                      </li>
+                      </div>
                     ))}
-                  </ul>
+                  </div>
                 </Card>
               ))}
             </div>

@@ -92,62 +92,6 @@ export default function AboutPage() {
               className="w-full h-full object-cover"
               loading="lazy"
             />
-            <div className="absolute bottom-4 left-4 right-4 sm:right-auto sm:max-w-xs bg-black/70 text-white rounded-2xl p-4 flex items-center gap-3 shadow-lg">
-              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-white/20">
-                <MapPin className="w-5 h-5" aria-hidden="true" />
-              </div>
-              <div>
-                <p className="text-xs uppercase tracking-[0.3em] text-white/70">
-                  Calgary Based
-                </p>
-                <p className="text-sm font-semibold leading-tight">
-                  Technicians dispatch from SE Calgary daily
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-      <section className="py-16 md:py-24 bg-muted/40">
-        <div className="container space-y-10">
-          <div className="max-w-2xl">
-            <p className="text-sm uppercase tracking-[0.3em] text-primary font-semibold mb-2">
-              Meet the team
-            </p>
-            <h2 className="text-3xl font-bold text-foreground">
-              Fully licensed technicians & designers
-            </h2>
-            <p className="text-muted-foreground mt-4">
-              Every installer holds current CSTS and fall-arrest certifications. We vet
-              suppliers, background-check staff, and keep training aligned with code
-              updates so you never have to worry who is on-site.
-            </p>
-          </div>
-          <div className="grid md:grid-cols-3 gap-6">
-            {team.map((member) => (
-              <Card
-                key={member.name}
-                className="p-6 border border-border/60 bg-white shadow-sm space-y-4"
-              >
-                <div className="flex items-center gap-4">
-                  <div className="h-12 w-12 rounded-full bg-primary/15 text-primary font-semibold flex items-center justify-center uppercase">
-                    {member.name
-                      .split(" ")
-                      .map((part) => part[0])
-                      .join("")}
-                  </div>
-                  <div>
-                    <p className="font-semibold text-foreground">{member.name}</p>
-                    <p className="text-xs uppercase tracking-wide text-muted-foreground">
-                      {member.role}
-                    </p>
-                  </div>
-                </div>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  {member.bio}
-                </p>
-              </Card>
-            ))}
           </div>
         </div>
       </section>
