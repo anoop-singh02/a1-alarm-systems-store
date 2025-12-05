@@ -19,13 +19,59 @@ export default function DesignSystemPage() {
     "residential",
   );
   const [squareFootage, setSquareFootage] = useState(2200);
-  const [indoorCameras, setIndoorCameras] = useState(3);
-  const [outdoorCameras, setOutdoorCameras] = useState(2);
-  const [audioZones, setAudioZones] = useState(2);
-  const [automation, setAutomation] = useState(true);
-  const [monitoring, setMonitoring] = useState(true);
+  const [entryPoints, setEntryPoints] = useState(4);
+  const [concerns, setConcerns] = useState<string[]>(["burglary", "monitoring"]);
+  const [budget, setBudget] = useState<"starter" | "balanced" | "premium">(
+    "balanced",
+  );
+  const [stepIndex, setStepIndex] = useState(0);
 
   const ecwidStoreId = import.meta.env.VITE_ECWID_STORE_ID;
+  const steps = [
+    {
+      title: "Property Type",
+      description: "Tell us whether we’re protecting a home or a business.",
+    },
+    {
+      title: "Size of the space",
+      description: "Approximate square footage helps us plan zones and devices.",
+    },
+    {
+      title: "Entry points & doors",
+      description: "We place contacts and cameras around vulnerable areas.",
+    },
+    {
+      title: "Top security concerns",
+      description: "Pick what matters most so we can tailor the package.",
+    },
+    {
+      title: "Budget focus",
+      description: "Dial in the right balance of protection and spend.",
+    },
+  ] as const;
+  const concernOptions = [
+    { id: "burglary", label: "Burglary & break-ins" },
+    { id: "fire", label: "Fire / environmental" },
+    { id: "monitoring", label: "24/7 monitoring" },
+    { id: "automation", label: "Smart automation" },
+  ];
+  const budgetOptions = [
+    {
+      id: "starter",
+      label: "Starter",
+      detail: "Core coverage with essential sensors.",
+    },
+    {
+      id: "balanced",
+      label: "Balanced",
+      detail: "Blends security, cameras, and automation.",
+    },
+    {
+      id: "premium",
+      label: "Premium",
+      detail: "Maximum deterrence with pro hardware.",
+    },
+  ] as const;
 
   useEffect(() => {
     const params = new URLSearchParams(search ?? "");
@@ -47,55 +93,102 @@ export default function DesignSystemPage() {
     };
   }, [ecwidStoreId]);
 
-  const estimatedCost = useMemo(() => {
-    const baseInstall =
-      squareFootage * (propertyType === "commercial" ? 0.18 : 0.12);
-    const cameraCost = indoorCameras * 220 + outdoorCameras * 260;
-    const automationCost = automation ? 450 : 0;
-    const audioCost = audioZones * 175;
-    const subtotal = baseInstall + cameraCost + automationCost + audioCost;
-    const multiplier = propertyType === "commercial" ? 1.2 : 1;
-    return Math.round(subtotal * multiplier);
-  }, [automation, audioZones, indoorCameras, outdoorCameras, propertyType, squareFootage]);
+  const monitoringIncluded = concerns.includes("monitoring");
+  const automationIncluded = concerns.includes("automation");
+  const fireIncluded = concerns.includes("fire");
 
-  const monthlyCost = useMemo(() => {
-    if (!monitoring) return 0;
-    return propertyType === "commercial" ? 89 : 59;
-  }, [monitoring, propertyType]);
+  const recommendedSystem = useMemo(() => {
+    const indoor =
+      propertyType === "commercial"
+        ? Math.max(3, Math.round(squareFootage / 1800))
+        : Math.max(2, Math.round(squareFootage / 1400));
+    const outdoor =
+      propertyType === "commercial"
+        ? Math.max(3, Math.round(entryPoints / 2))
+        : Math.max(1, Math.round(entryPoints / 3));
+    const sensors = Math.max(entryPoints, indoor + outdoor + 2);
+    return { indoor, outdoor, sensors };
+  }, [entryPoints, propertyType, squareFootage]);
 
   const coverageRating = useMemo(() => {
-    const coverage = indoorCameras + outdoorCameras;
-    if (coverage >= 7) return "Comprehensive";
+    const coverage = recommendedSystem.indoor + recommendedSystem.outdoor;
+    if (coverage >= 8) return "Comprehensive";
     if (coverage >= 4) return "Balanced";
     return "Core Essentials";
-  }, [indoorCameras, outdoorCameras]);
+  }, [recommendedSystem]);
+
+  const estimatedCost = useMemo(() => {
+    const baseInstall =
+      (squareFootage / (propertyType === "commercial" ? 1800 : 1400)) *
+      (propertyType === "commercial" ? 1400 : 900);
+    const entryPointCost =
+      entryPoints * (propertyType === "commercial" ? 160 : 110);
+    const cameraCost =
+      (recommendedSystem.indoor + recommendedSystem.outdoor) *
+      (propertyType === "commercial" ? 260 : 210);
+    const concernCost =
+      (fireIncluded ? 350 : 0) + (automationIncluded ? 450 : 0);
+    const subtotal = baseInstall + entryPointCost + cameraCost + concernCost;
+    const budgetMultiplier =
+      budget === "starter" ? 0.9 : budget === "premium" ? 1.25 : 1;
+    return Math.round(subtotal * budgetMultiplier);
+  }, [
+    automationIncluded,
+    budget,
+    entryPoints,
+    fireIncluded,
+    propertyType,
+    recommendedSystem.indoor,
+    recommendedSystem.outdoor,
+    squareFootage,
+  ]);
+
+  const monthlyCost = useMemo(() => {
+    if (!monitoringIncluded) return 0;
+    return propertyType === "commercial" ? 99 : 69;
+  }, [monitoringIncluded, propertyType]);
 
   const configurationSummary = useMemo(
     () => ({
       propertyType,
       squareFootage,
-      indoorCameras,
-      outdoorCameras,
-      audioZones,
-      automation,
-      monitoring,
+      entryPoints,
+      concerns,
+      budget,
+      indoorCameras: recommendedSystem.indoor,
+      outdoorCameras: recommendedSystem.outdoor,
+      monitoring: monitoringIncluded,
       estimatedCost,
       monthlyCost,
       coverageRating,
     }),
     [
-      audioZones,
-      automation,
+      budget,
+      monitoringIncluded,
+      concerns,
       coverageRating,
+      entryPoints,
       estimatedCost,
-      indoorCameras,
       monthlyCost,
-      monitoring,
-      outdoorCameras,
       propertyType,
+      recommendedSystem.indoor,
+      recommendedSystem.outdoor,
       squareFootage,
     ],
   );
+
+  const totalSteps = steps.length;
+  const progress = ((stepIndex + 1) / totalSteps) * 100;
+
+  const handleNext = () =>
+    setStepIndex((prev) => Math.min(prev + 1, totalSteps - 1));
+  const handlePrev = () => setStepIndex((prev) => Math.max(prev - 1, 0));
+  const toggleConcern = (id: string) =>
+    setConcerns((prev) =>
+      prev.includes(id)
+        ? prev.filter((concern) => concern !== id)
+        : [...prev, id],
+    );
 
   const handleSendConfiguration = () => {
     localStorage.setItem(
@@ -107,6 +200,144 @@ export default function DesignSystemPage() {
     );
     const basePath = (import.meta.env.BASE_URL ?? "/").replace(/\/$/, "");
     window.location.assign(`${basePath}/contact?configDraft=1`);
+  };
+
+  const placementZones =
+    propertyType === "commercial"
+      ? [
+          { label: "Lobby & Reception", cameras: 2 },
+          { label: "Shop Floor", cameras: 2 },
+          { label: "Perimeter / Yard", cameras: 3 },
+          { label: "Server / Cash Office", cameras: 1 },
+        ]
+      : [
+          { label: "Front Entry", cameras: 1 },
+          { label: "Main Floor", cameras: 2 },
+          { label: "Garage / Alley", cameras: 1 },
+          { label: "Backyard", cameras: 1 },
+        ];
+
+  const renderStepContent = () => {
+    switch (stepIndex) {
+      case 0:
+        return (
+          <div className="flex flex-wrap gap-4">
+            {["residential", "commercial"].map((type) => (
+              <button
+                key={type}
+                type="button"
+                onClick={() =>
+                  setPropertyType(type as "residential" | "commercial")
+                }
+                className={`rounded-2xl border px-5 py-3 text-left transition-colors ${
+                  propertyType === type
+                    ? "border-[#0096c7] bg-[#0096c7]/10 text-foreground"
+                    : "border-border hover:border-primary/50"
+                }`}
+              >
+                <p className="text-sm font-semibold capitalize">{type}</p>
+                <p className="text-xs text-muted-foreground">
+                  {type === "residential"
+                    ? "Homes, condos, rentals"
+                    : "Retail, office, industrial"}
+                </p>
+              </button>
+            ))}
+          </div>
+        );
+      case 1:
+        return (
+          <div className="space-y-4">
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-muted-foreground">Square footage</span>
+              <span className="font-semibold">
+                {squareFootage.toLocaleString()} sq. ft.
+              </span>
+            </div>
+            <input
+              type="range"
+              min={700}
+              max={propertyType === "commercial" ? 20000 : 6000}
+              step={100}
+              value={squareFootage}
+              onChange={(event) => setSquareFootage(Number(event.target.value))}
+              className="w-full accent-[#0096c7]"
+            />
+            <p className="text-xs text-muted-foreground">
+              Larger spaces typically need more zones, repeaters, and cameras.
+            </p>
+          </div>
+        );
+      case 2:
+        return (
+          <div className="space-y-4">
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-muted-foreground">Entry points</span>
+              <span className="font-semibold">{entryPoints} doors/windows</span>
+            </div>
+            <input
+              type="range"
+              min={2}
+              max={propertyType === "commercial" ? 30 : 12}
+              step={1}
+              value={entryPoints}
+              onChange={(event) => setEntryPoints(Number(event.target.value))}
+              className="w-full accent-[#0096c7]"
+            />
+            <p className="text-xs text-muted-foreground">
+              Count exterior doors, patio entries, and accessible windows.
+            </p>
+          </div>
+        );
+      case 3:
+        return (
+          <div className="space-y-4">
+            <p className="text-sm text-muted-foreground">
+              Choose everything that applies.
+            </p>
+            <div className="grid sm:grid-cols-2 gap-3">
+              {concernOptions.map((option) => {
+                const active = concerns.includes(option.id);
+                return (
+                  <button
+                    key={option.id}
+                    type="button"
+                    onClick={() => toggleConcern(option.id)}
+                    className={`rounded-xl border px-4 py-3 text-left text-sm transition-colors ${
+                      active
+                        ? "border-[#0096c7] bg-[#0096c7]/10 text-primary"
+                        : "border-border hover:border-primary/40"
+                    }`}
+                  >
+                    {option.label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        );
+      case 4:
+      default:
+        return (
+          <div className="grid sm:grid-cols-3 gap-3">
+            {budgetOptions.map((option) => (
+              <button
+                key={option.id}
+                type="button"
+                onClick={() => setBudget(option.id)}
+                className={`rounded-2xl border px-4 py-3 text-left transition-colors ${
+                  budget === option.id
+                    ? "border-[#0096c7] bg-[#0096c7]/10"
+                    : "border-border hover:border-primary/40"
+                }`}
+              >
+                <p className="text-sm font-semibold">{option.label}</p>
+                <p className="text-xs text-muted-foreground">{option.detail}</p>
+              </button>
+            ))}
+          </div>
+        );
+    }
   };
 
   return (
@@ -132,205 +363,52 @@ export default function DesignSystemPage() {
         <div className="container">
           <div className="grid lg:grid-cols-[2fr_1fr] gap-8">
             <Card className="p-8 border border-primary/10 bg-white shadow-lg">
-              <div className="space-y-8">
+              <div className="flex items-start justify-between gap-4 mb-8">
                 <div>
-                  <div className="flex items-center justify-between mb-3">
-                    <div>
-                      <p className="text-xs uppercase tracking-wide text-primary font-semibold">
-                        Step 1
-                      </p>
-                      <h3 className="text-xl font-semibold text-foreground">
-                        Property Type
-                      </h3>
-                    </div>
-                    <span className="text-sm text-muted-foreground">
-                      Choose the space you’re securing
-                    </span>
-                  </div>
-                  <div className="flex flex-wrap gap-3">
-                    {[
-                      { id: "residential", label: "Residential" },
-                      { id: "commercial", label: "Commercial" },
-                    ].map((option) => (
-                      <button
-                        key={option.id}
-                        type="button"
-                        onClick={() =>
-                          setPropertyType(option.id as "residential" | "commercial")
-                        }
-                        aria-pressed={propertyType === option.id}
-                        className={`rounded-full px-4 py-2 text-sm font-medium transition-colors border ${
-                          propertyType === option.id
-                            ? "bg-[#0096c7] text-white border-[#0096c7]"
-                            : "bg-white text-muted-foreground border-border hover:border-primary/40"
-                        }`}
-                      >
-                        {option.label}
-                      </button>
-                    ))}
-                  </div>
+                  <p className="text-xs uppercase tracking-[0.3em] text-primary font-semibold">
+                    Step {stepIndex + 1} of {totalSteps}
+                  </p>
+                  <h3 className="text-2xl font-semibold text-foreground mt-1">
+                    {steps[stepIndex].title}
+                  </h3>
+                  <p className="text-sm text-muted-foreground">
+                    {steps[stepIndex].description}
+                  </p>
                 </div>
-
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-lg font-semibold text-foreground">
-                      Square Footage
-                    </h3>
-                    <input
-                      aria-label="Square footage"
-                      type="number"
-                      min={800}
-                      max={6000}
-                      step={100}
-                      value={squareFootage}
-                      onChange={(event) =>
-                        setSquareFootage(Number(event.target.value))
-                      }
-                      className="w-28 rounded-md border border-border bg-muted/40 px-2 py-1 text-sm text-foreground"
-                    />
-                  </div>
-                  <input
-                    type="range"
-                    min={800}
-                    max={6000}
-                    step={100}
-                    value={squareFootage}
-                    onChange={(event) => setSquareFootage(Number(event.target.value))}
-                    className="w-full accent-[#0096c7]"
-                    aria-label="Square footage slider"
-                    aria-valuemin={800}
-                    aria-valuemax={6000}
-                    aria-valuenow={squareFootage}
-                  />
-                  <div className="flex justify-between text-xs text-muted-foreground mt-1">
-                    <span>800</span>
-                    <span>6,000</span>
-                  </div>
-                </div>
-
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <h3 className="text-lg font-semibold">Indoor Cameras</h3>
-                      <input
-                        aria-label="Indoor camera count"
-                        type="number"
-                        min={1}
-                        max={8}
-                        value={indoorCameras}
-                        onChange={(event) =>
-                          setIndoorCameras(Number(event.target.value))
-                        }
-                        className="w-16 rounded-md border border-border bg-muted/40 px-2 py-1 text-sm text-foreground"
-                      />
-                    </div>
-                    <input
-                      type="range"
-                      min={1}
-                      max={8}
-                      value={indoorCameras}
-                      onChange={(event) => setIndoorCameras(Number(event.target.value))}
-                      className="w-full accent-[#0096c7]"
-                      aria-label="Indoor camera slider"
-                      aria-valuemin={1}
-                      aria-valuemax={8}
-                      aria-valuenow={indoorCameras}
-                    />
-                  </div>
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <h3 className="text-lg font-semibold">Outdoor Cameras</h3>
-                      <input
-                        aria-label="Outdoor camera count"
-                        type="number"
-                        min={0}
-                        max={8}
-                        value={outdoorCameras}
-                        onChange={(event) =>
-                          setOutdoorCameras(Number(event.target.value))
-                        }
-                        className="w-16 rounded-md border border-border bg-muted/40 px-2 py-1 text-sm text-foreground"
-                      />
-                    </div>
-                    <input
-                      type="range"
-                      min={0}
-                      max={8}
-                      value={outdoorCameras}
-                      onChange={(event) => setOutdoorCameras(Number(event.target.value))}
-                      className="w-full accent-[#0096c7]"
-                      aria-label="Outdoor camera slider"
-                      aria-valuemin={0}
-                      aria-valuemax={8}
-                      aria-valuenow={outdoorCameras}
+                <div className="w-32">
+                  <div className="h-1.5 rounded-full bg-muted">
+                    <div
+                      className="h-full rounded-full bg-primary transition-all"
+                      style={{ width: `${progress}%` }}
                     />
                   </div>
                 </div>
-
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-lg font-semibold">Audio Zones</h3>
-                    <input
-                      aria-label="Audio zones"
-                      type="number"
-                      min={0}
-                      max={6}
-                      value={audioZones}
-                      onChange={(event) => setAudioZones(Number(event.target.value))}
-                      className="w-16 rounded-md border border-border bg-muted/40 px-2 py-1 text-sm text-foreground"
-                    />
-                  </div>
-                  <input
-                    type="range"
-                    min={0}
-                    max={6}
-                    value={audioZones}
-                    onChange={(event) => setAudioZones(Number(event.target.value))}
-                    className="w-full accent-[#0096c7]"
-                    aria-label="Audio zones slider"
-                    aria-valuemin={0}
-                    aria-valuemax={6}
-                    aria-valuenow={audioZones}
-                  />
-                </div>
-
-                <div className="grid md:grid-cols-2 gap-4">
-                  {[
-                    {
-                      label: "Smart Automation",
-                      state: automation,
-                      setter: setAutomation,
-                    },
-                    {
-                      label: "24/7 Monitoring",
-                      state: monitoring,
-                      setter: setMonitoring,
-                    },
-                  ].map((toggle) => (
-                    <button
-                      key={toggle.label}
+              </div>
+              <div className="space-y-6">{renderStepContent()}</div>
+              <div className="flex items-center justify-between border-t border-border mt-8 pt-6">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  onClick={handlePrev}
+                  disabled={stepIndex === 0}
+                >
+                  Back
+                </Button>
+                <div className="flex gap-3">
+                  {stepIndex < totalSteps - 1 && (
+                    <Button type="button" onClick={handleNext}>
+                      Next step
+                    </Button>
+                  )}
+                  {stepIndex === totalSteps - 1 && (
+                    <Button
                       type="button"
-                      role="switch"
-                      aria-checked={toggle.state}
-                      onClick={() => toggle.setter((prev) => !prev)}
-                      className={`flex items-center justify-between rounded-2xl border px-4 py-3 transition ${
-                        toggle.state
-                          ? "border-[#0096c7] bg-[#0096c7]/10"
-                          : "border-border hover:border-primary/40"
-                      }`}
+                      className="bg-[#0096c7] hover:bg-[#0077a8] text-white"
+                      onClick={handleSendConfiguration}
                     >
-                      <span className="text-sm font-semibold text-foreground">
-                        {toggle.label}
-                      </span>
-                      <span
-                        className={`text-xs font-bold uppercase ${
-                          toggle.state ? "text-[#0096c7]" : "text-muted-foreground"
-                        }`}
-                      >
-                        {toggle.state ? "Included" : "Add"}
-                      </span>
-                    </button>
-                  ))}
+                      Save My Quote
+                    </Button>
+                  )}
                 </div>
               </div>
             </Card>
@@ -338,16 +416,16 @@ export default function DesignSystemPage() {
             <div className="space-y-6">
               <Card className="p-6 bg-white border border-primary/10 shadow-md">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold">System Summary</h3>
+                  <h3 className="text-lg font-semibold">Recommended package</h3>
                   <span className="text-xs uppercase tracking-wide text-muted-foreground">
-                    Estimator
+                    Real-time estimate
                   </span>
                 </div>
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-xs text-muted-foreground uppercase tracking-wide">
-                        Estimated Install
+                        Estimated install
                       </p>
                       <p className="text-3xl font-bold text-foreground">
                         {formatCurrency(estimatedCost)}
@@ -355,7 +433,7 @@ export default function DesignSystemPage() {
                     </div>
                     <div className="text-right">
                       <p className="text-xs text-muted-foreground uppercase tracking-wide">
-                        Monthly Monitoring
+                        Monthly monitoring
                       </p>
                       <p className="text-xl font-semibold text-foreground">
                         {monthlyCost ? formatCurrency(monthlyCost) : "Optional"}
@@ -364,12 +442,33 @@ export default function DesignSystemPage() {
                   </div>
                   <div className="grid grid-cols-2 gap-3 text-sm">
                     {[
-                      { label: "Total Cameras", value: indoorCameras + outdoorCameras },
-                      { label: "Coverage", value: coverageRating },
-                      { label: "Automation", value: automation ? "Enabled" : "None" },
                       {
-                        label: "Audio Zones",
-                        value: audioZones ? `${audioZones} rooms` : "Not added",
+                        label: "Cameras",
+                        value: `${recommendedSystem.indoor + recommendedSystem.outdoor} total`,
+                      },
+                      { label: "Coverage", value: coverageRating },
+                      {
+                        label: "Entry points",
+                        value: `${entryPoints} doors/windows`,
+                      },
+                      {
+                        label: "Focus",
+                        value: concerns.length
+                          ? concerns
+                              .map((id) => concernOptions.find((c) => c.id === id)?.label)
+                              .filter(Boolean)
+                              .join(", ")
+                          : "Custom",
+                      },
+                      {
+                        label: "Budget",
+                        value:
+                          budgetOptions.find((opt) => opt.id === budget)?.label ??
+                          budget,
+                      },
+                      {
+                        label: "Property Type",
+                        value: propertyType,
                       },
                     ].map((item) => (
                       <div
@@ -388,45 +487,23 @@ export default function DesignSystemPage() {
                     onClick={handleSendConfiguration}
                     className="w-full bg-[#0096c7] hover:bg-[#0077a8] text-white"
                   >
-                    Send Configuration with Quote
+                    Save My Quote & Email It
                   </Button>
                   <p className="text-xs text-muted-foreground">
-                    Final pricing is confirmed during your on-site assessment. This
-                    estimate helps us understand your goals before visiting.
+                    We’ll attach this configuration to your contact form so our sales
+                    team already knows your priorities.
                   </p>
                 </div>
               </Card>
               <Card className="p-6 bg-white border border-primary/10 shadow-md">
-                <h3 className="text-lg font-semibold mb-4">Why Build With Us</h3>
-                <ul className="space-y-3 text-sm text-muted-foreground">
-                  {[
-                    "Guided design wizard for homes and businesses",
-                    "Instant configuration summary you can email or print",
-                    "Flexible packages for security, automation, and networking",
-                  ].map((item) => (
-                    <li key={item} className="flex gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-primary mt-0.5" />
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </Card>
-              <Card className="p-6 bg-white border border-primary/10 shadow-md">
-                <h3 className="text-lg font-semibold mb-2">Visualize Coverage</h3>
-                <p className="text-sm text-muted-foreground mb-4">
-                  Drag sliders above, then use this mini plan to imagine where cameras
-                  land. On desktop you can drop icons into our Ecwid kit builder.
-                </p>
+                <h3 className="text-lg font-semibold mb-4">
+                  Visualizing camera placement
+                </h3>
                 <div className="grid grid-cols-2 gap-3 h-48">
-                  {[
-                    { label: "Entry", cameras: 1 },
-                    { label: "Great Room", cameras: 2 },
-                    { label: "Garage", cameras: 1 },
-                    { label: "Yard", cameras: 2 },
-                  ].map((zone) => (
+                  {placementZones.map((zone) => (
                     <div
                       key={zone.label}
-                      className="relative rounded-xl border border-dashed border-primary/40 bg-gradient-to-br from-slate-50 to-slate-100 p-3 flex flex-col justify-between"
+                      className="rounded-xl border border-dashed border-primary/40 bg-gradient-to-br from-slate-50 to-slate-100 p-3 flex flex-col justify-between"
                     >
                       <p className="text-xs font-semibold text-muted-foreground">
                         {zone.label}
@@ -445,9 +522,24 @@ export default function DesignSystemPage() {
                   ))}
                 </div>
                 <p className="text-xs text-muted-foreground mt-3">
-                  Tip: Residential buyers usually start with cameras in Entry, Garage,
-                  and Yard; commercial lots focus on shipping doors and POS areas.
+                  We map cameras to high-traffic areas, shipping doors, and blind spots
+                  so you can visualize coverage before we visit on-site.
                 </p>
+              </Card>
+              <Card className="p-6 bg-white border border-primary/10 shadow-md">
+                <h3 className="text-lg font-semibold mb-4">What happens next?</h3>
+                <ul className="space-y-3 text-sm text-muted-foreground">
+                  {[
+                    "Email your configuration to our team with a single click.",
+                    "We review your quiz answers and prep a tailored layout.",
+                    "A specialist calls within one business day to confirm details.",
+                  ].map((item) => (
+                    <li key={item} className="flex gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-primary mt-0.5" />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
               </Card>
             </div>
           </div>

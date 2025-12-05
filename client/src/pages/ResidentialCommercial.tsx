@@ -53,6 +53,19 @@ export default function ResidentialCommercialPage() {
           </p>
         </div>
       </section>
+      <nav className="bg-muted/30 border-b">
+        <div className="container py-3 text-sm text-muted-foreground flex items-center gap-2">
+          <Link href="/" className="hover:text-foreground">
+            Home
+          </Link>
+          <span>/</span>
+          <Link href="/services" className="hover:text-foreground">
+            Services
+          </Link>
+          <span>/</span>
+          <span className="text-foreground">Residential & Commercial</span>
+        </div>
+      </nav>
       <section className="py-16 md:py-24">
         <div className="container space-y-12">
           <Card className="p-8 space-y-6">

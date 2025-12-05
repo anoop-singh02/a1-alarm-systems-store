@@ -9,6 +9,7 @@ import {
   Zap,
   Volume2,
   ChevronRight,
+  Check,
 } from "lucide-react";
 import { Link } from "wouter";
 
@@ -70,6 +71,51 @@ const services = [
   },
 ];
 
+const packageTiers = [
+  {
+    id: "basic",
+    name: "Basic",
+    price: "$49/mo",
+    setup: "Install from $899",
+    description: "Essential protection for condos & starter homes.",
+    popular: false,
+  },
+  {
+    id: "standard",
+    name: "Standard",
+    price: "$69/mo",
+    setup: "Install from $1,499",
+    description: "Balanced coverage with automation + video.",
+    popular: true,
+  },
+  {
+    id: "premium",
+    name: "Premium",
+    price: "$99/mo",
+    setup: "Install from $2,499",
+    description: "Full deterrence for luxury homes & businesses.",
+    popular: false,
+  },
+];
+
+const packageFeatures: Array<{
+  label: string;
+  basic: boolean;
+  standard: boolean;
+  premium: boolean;
+}> = [
+  { label: "ULC 24/7 Monitoring", basic: true, standard: true, premium: true },
+  { label: "DSC/Honeywell Smart Panel", basic: true, standard: true, premium: true },
+  { label: "PowerG Sensors on Every Entry", basic: true, standard: true, premium: true },
+  { label: "4K Exterior Cameras", basic: false, standard: true, premium: true },
+  { label: "Interior Dome Cameras", basic: false, standard: true, premium: true },
+  { label: "Smart Lock + Thermostat", basic: false, standard: true, premium: true },
+  { label: "Automation Scenes & App Control", basic: false, standard: true, premium: true },
+  { label: "Dedicated Video Analytics", basic: false, standard: false, premium: true },
+  { label: "Professional Audio & Vacuum Integration", basic: false, standard: false, premium: true },
+  { label: "Priority Technician Dispatch", basic: false, standard: false, premium: true },
+];
+
 export default function ServicesPage() {
   return (
     <div className="min-h-screen bg-background">
@@ -86,6 +132,15 @@ export default function ServicesPage() {
           </p>
         </div>
       </section>
+      <nav className="bg-muted/30 border-b">
+        <div className="container py-3 text-sm text-muted-foreground flex items-center gap-2">
+          <Link href="/" className="hover:text-foreground">
+            Home
+          </Link>
+          <span>/</span>
+          <span className="text-foreground">Services</span>
+        </div>
+      </nav>
       <section className="py-16 md:py-24">
         <div className="container grid gap-8 md:grid-cols-2">
           {services.map((service) => {
@@ -153,6 +208,90 @@ export default function ServicesPage() {
               </Button>
             </Link>
           </Card>
+        </div>
+      </section>
+      <section className="py-16 bg-muted/40">
+        <div className="container space-y-8">
+          <div className="text-center space-y-3">
+            <p className="text-sm uppercase tracking-[0.3em] text-primary font-semibold">
+              Compare Packages
+            </p>
+            <h2 className="text-3xl font-bold text-foreground">
+              Pick a starting point, then customize every detail
+            </h2>
+            <p className="text-muted-foreground max-w-3xl mx-auto">
+              All packages include installation by licensed A-1 technicians, lifetime
+              service support, and our 30-day cancellation flexibility. Choose the
+              tier that fits, then jump into the System Designer to tailor it further.
+            </p>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[640px] border-separate border-spacing-y-3">
+              <thead>
+                <tr>
+                  <th className="text-left text-xs uppercase tracking-wider text-muted-foreground">
+                    Features
+                  </th>
+                  {packageTiers.map((tier) => (
+                    <th key={tier.id} className="text-center">
+                      <div className="relative inline-flex flex-col items-center gap-1 rounded-2xl border bg-white px-4 py-3 shadow-sm">
+                        {tier.popular && (
+                          <span className="absolute -top-3 text-[10px] uppercase tracking-widest bg-primary text-white px-2 py-1 rounded-full">
+                            Most Popular
+                          </span>
+                        )}
+                        <p className="text-sm font-semibold">{tier.name}</p>
+                        <p className="text-2xl font-bold text-foreground">{tier.price}</p>
+                        <p className="text-xs text-muted-foreground">{tier.setup}</p>
+                        <p className="text-xs text-muted-foreground">{tier.description}</p>
+                      </div>
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {packageFeatures.map((feature) => (
+                  <tr key={feature.label} className="bg-white">
+                    <td className="p-4 text-sm font-medium text-foreground border border-border rounded-l-2xl">
+                      {feature.label}
+                    </td>
+                    {(["basic", "standard", "premium"] as const).map((tier) => {
+                      const included = feature[tier];
+                      return (
+                        <td
+                          key={`${feature.label}-${tier}`}
+                          className="p-4 text-center border border-border"
+                        >
+                          {included ? (
+                            <Check className="inline-block w-5 h-5 text-primary" />
+                          ) : (
+                            <span className="text-muted-foreground">—</span>
+                          )}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                ))}
+                <tr>
+                  <td className="p-4 text-sm font-medium text-foreground border border-border rounded-l-2xl">
+                    Ready to tailor your package?
+                  </td>
+                  {packageTiers.map((tier) => (
+                    <td
+                      key={`${tier.id}-cta`}
+                      className="p-4 text-center border border-border rounded-r-2xl"
+                    >
+                      <Link href={`/store?type=${tier.id === "premium" ? "commercial" : "residential"}`}>
+                        <Button size="sm" className="bg-[#0096c7] hover:bg-[#0077a8] text-white">
+                          Customize
+                        </Button>
+                      </Link>
+                    </td>
+                  ))}
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </section>
       <Footer />

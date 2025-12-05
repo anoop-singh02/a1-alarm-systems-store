@@ -153,11 +153,51 @@ export default function ContactPage() {
                       Monitoring
                     </p>
                     <p className="font-semibold text-foreground">
-                      {configSummary.monitoring
+                      {configSummary.monthlyCost
                         ? formatCurrency(configSummary.monthlyCost)
                         : "Not requested"}
                     </p>
                   </div>
+                  {typeof configSummary.entryPoints === "number" && (
+                    <div>
+                      <p className="text-xs uppercase tracking-wide text-muted-foreground">
+                        Entry points
+                      </p>
+                      <p className="font-semibold text-foreground">
+                        {configSummary.entryPoints}
+                      </p>
+                    </div>
+                  )}
+                  {configSummary.concerns && configSummary.concerns.length > 0 && (
+                    <div>
+                      <p className="text-xs uppercase tracking-wide text-muted-foreground">
+                        Focus areas
+                      </p>
+                      <p className="font-semibold text-foreground">
+                        {configSummary.concerns.join(", ")}
+                      </p>
+                    </div>
+                  )}
+                  {configSummary.budget && (
+                    <div>
+                      <p className="text-xs uppercase tracking-wide text-muted-foreground">
+                        Budget tier
+                      </p>
+                      <p className="font-semibold text-foreground">
+                        {configSummary.budget}
+                      </p>
+                    </div>
+                  )}
+                  {typeof configSummary.squareFootage === "number" && (
+                    <div>
+                      <p className="text-xs uppercase tracking-wide text-muted-foreground">
+                        Approx. size
+                      </p>
+                      <p className="font-semibold text-foreground">
+                        {configSummary.squareFootage.toLocaleString()} sq. ft.
+                      </p>
+                    </div>
+                  )}
                 </div>
                 <p className="text-xs">
                   Sent on:{" "}
